@@ -5,7 +5,7 @@
 
 YOLOv4 Tiny is one of the fastest object detectors that exists currently. The goal of this project is to completely recreate it without any existing ML libraries such as Darknet, PyTorch, or TensorFlow in order to port it into a VR game called VRChat.
 
-My naive implementation only runs around 9 FPS so it doesn't hog resources for VR. It is nowhere near as performant as the original.
+My naive implementation only runs around 30 FPS so it doesn't hog resources for VR. It is nowhere near as performant as the original.
 
 This implementation is based on the TensorFlow version from https://github.com/hunglc007/tensorflow-yolov4-tflite
 
@@ -54,10 +54,10 @@ for (i = 0; i < 26; i++) {
         if (conf > 0.5) {
             // Class, 0 to 79
             float c = f16tof32(buff.b >> 16);
-            // x, y is the center position of the bbox relative to 416, the input size
+            // x, y is the center position of the bbox relative to 416, the initial image input size that goes into the network
             float x = f16tof32(buff.r >> 16);
             float y = f16tof32(buff.r);
-            // w, h are the width and height of the bbox relative to 416, the input size
+            // w, h are the width and height of the bbox relative to 416, the initial image input size that goes into the network
             float w = f16tof32(buff.g >> 16);
             float h = f16tof32(buff.g);
             // Scale to camera resolution using UVs
@@ -79,10 +79,10 @@ for (i = 0; i < 13; i++) {
         if (conf > 0.5) {
             // Class, 0 to 79
             float c = f16tof32(buff.b >> 16);
-            // x, y is the center position of the bbox relative to 416, the input size
+            // x, y is the center position of the bbox relative to 416, the initial image input size that goes into the network
             float x = f16tof32(buff.r >> 16);
             float y = f16tof32(buff.r);
-            // w, h are the width and height of the bbox relative to 416, the input size
+            // w, h are the width and height of the bbox relative to 416, the initial image input size that goes into the network
             float w = f16tof32(buff.g >> 16);
             float h = f16tof32(buff.g);
             // Scale to camera resolution using UVs

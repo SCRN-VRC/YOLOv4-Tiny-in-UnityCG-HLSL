@@ -84,7 +84,7 @@ Shader "YOLOv4Tiny/nms"
                 uint2 px = fs.uv.xy * _Buffer_TexelSize.zw;
                 
                 uint4 col = asuint(_Buffer[px]);
-                uint time = mod(floor(_Time.y * 30), 5.0);
+                uint time = mod(floor(_Time.y * 60), 5.0);
 
                 if (time == 0 && insideArea(txL20simp, px))
                 {

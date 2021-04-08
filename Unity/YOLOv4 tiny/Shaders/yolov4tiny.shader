@@ -23,7 +23,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
         _CamIn ("Cam Input", 2D) = "white" {}
         _Buffer ("Buffer", 2D) = "black" {}
         _Baked ("Baked Params", 2D) = "black" {}
-        _FrameDelay ("Frame Delay", Range(1, 20)) = 5
+        _FrameDelay ("Frame Delay", Range(1, 20)) = 3
         _MaxDist ("Max Distance", Float) = 0.02
     }
     SubShader
