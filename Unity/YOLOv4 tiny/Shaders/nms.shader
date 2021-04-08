@@ -1,4 +1,20 @@
-﻿Shader "YOLOv4Tiny/nms"
+﻿/*
+    Non maximum suppression, gets rid of overlapping bounding boxes
+
+    Usually this is done by the CPU, which can easily sort of list of
+    only the bboxes with confidence over 0.5 and calculate the IOU.
+
+    On the GPU there's no shared data between pixels inside the fragment
+    shader, so we must compare every single bounding box.
+
+    To reduce the # of comparisons, I assume the 3 anchors per cell
+    predicts the same class and only use the anchor with the largest
+    confidence. This cuts down the # of bboxes by 1/3.
+
+    - SCRN
+*/
+
+Shader "YOLOv4Tiny/nms"
 {
     Properties
     {
@@ -72,8 +88,11 @@
 
                 if (time == 0 && insideArea(txL20simp, px))
                 {
+                    // Reshape the output data into something more manageable
+                    // for the comparisons
                     px -= txL20simp.xy;
 
+                    // Just pick one anchor to reduce comparisons
                     uint iAnchor = 0;
                     float conf0 = decodeL20(_YOLOout, uint4(px.x, px.y, 0, 4));
                     float conf1 = decodeL20(_YOLOout, uint4(px.x, px.y, 1, 4));
@@ -108,8 +127,11 @@
                 }
                 else if (time == 1 && insideArea(txL17simp, px))
                 {
+                    // Reshape the output data into something more manageable
+                    // for the comparisons
                     px -= txL17simp.xy;
 
+                    // Just pick one anchor to reduce comparisons
                     uint iAnchor = 0;
                     float conf0 = decodeL17(_YOLOout, uint4(px.x, px.y, 0, 4));
                     float conf1 = decodeL17(_YOLOout, uint4(px.x, px.y, 1, 4));
@@ -144,6 +166,10 @@
                 }
                 else if (time == 2 && insideArea(txL20nms, px))
                 {
+                    // Compare current bbox with every other bbox
+                    // If there exists a bbox that's the same class,
+                    // but with more confidence and with more than
+                    // 50% intersection, we delete the current bbox
                     px -= txL20nms.xy;
 
                     uint4 curBuf = asuint(_Buffer[txL20simp + px]);
@@ -204,6 +230,10 @@
                 }
                 else if (time == 3 && insideArea(txL17nms, px))
                 {
+                    // Compare current bbox with every other bbox
+                    // If there exists a bbox that's the same class,
+                    // but with more confidence and with more than
+                    // 50% intersection, we delete the current bbox
                     px -= txL17nms.xy;
 
                     uint4 curBuf = asuint(_Buffer[txL17simp + px]);

@@ -1,4 +1,22 @@
-﻿Shader "YOLOv4Tiny/yolov4tiny"
+﻿/*
+    Naive implementation of YOLOv4 tiny inside a fragment shader
+
+    Takes an image as input and steps through each layer of YOLO
+    one frame at a time.
+
+    It also uses a 4k x 2k image for the 6mil trained parameters
+    baked onto it.
+
+    Outputs to a 2.9k x 2.9k image, which is buffered and fed back
+    into the network.
+
+    Not the fastest implementation, but the outputs are nearly identical
+    except for the bilinear upscaling layer
+
+    - SCRN
+*/
+
+Shader "YOLOv4Tiny/yolov4tiny"
 {
     Properties
     {
@@ -72,7 +90,9 @@
                 float col = _Buffer[px];
                 uint time = floor(_Time.y * 90);
 
-                // Resize RGB channels for input
+                // Split up the RGB channels cause it's a 1 channel texture
+                // The input is rotated by 90 degrees cause 0, 0 origin is
+                // different in cg/HLSL from OpenCV and tensorflow
                 [branch]
                 if ((time % _FrameDelay) == 0 && insideArea(txImgIn0, px))
                 {
@@ -100,6 +120,7 @@
                 }
                 else if ((time + 1) % _FrameDelay == 0 && insideArea(txL0, px))
                 {
+                    // L0, kernel=3x3, stride=2, padding=valid
                     px -= txL0.xy;
                     uint i = px.y % 208;
                     uint j = px.x % 208;
@@ -109,65 +130,35 @@
                     uint j0 = j * 2, j1 = j0 + 1, j2 = j0 + 2;
                     float sum = 0.0;
 
-                    sum = mad(getImg(_Buffer, txImgIn0, i0, j0), getW0(_Baked, uint4(0, 0, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i0, j1), getW0(_Baked, uint4(0, 1, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i0, j2), getW0(_Baked, uint4(0, 2, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i1, j0), getW0(_Baked, uint4(1, 0, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i1, j1), getW0(_Baked, uint4(1, 1, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i1, j2), getW0(_Baked, uint4(1, 2, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i2, j0), getW0(_Baked, uint4(2, 0, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i2, j1), getW0(_Baked, uint4(2, 1, 0, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn0, i2, j2), getW0(_Baked, uint4(2, 2, 0, k)), sum);
+                    sum += getImg(_Buffer, txImgIn0, i0, j0) * getW0(_Baked, uint4(0, 0, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i0, j1) * getW0(_Baked, uint4(0, 1, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i0, j2) * getW0(_Baked, uint4(0, 2, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i1, j0) * getW0(_Baked, uint4(1, 0, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i1, j1) * getW0(_Baked, uint4(1, 1, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i1, j2) * getW0(_Baked, uint4(1, 2, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i2, j0) * getW0(_Baked, uint4(2, 0, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i2, j1) * getW0(_Baked, uint4(2, 1, 0, k)) +
+                        getImg(_Buffer, txImgIn0, i2, j2) * getW0(_Baked, uint4(2, 2, 0, k));
                 
-                    sum = mad(getImg(_Buffer, txImgIn1, i0, j0), getW0(_Baked, uint4(0, 0, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i0, j1), getW0(_Baked, uint4(0, 1, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i0, j2), getW0(_Baked, uint4(0, 2, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i1, j0), getW0(_Baked, uint4(1, 0, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i1, j1), getW0(_Baked, uint4(1, 1, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i1, j2), getW0(_Baked, uint4(1, 2, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i2, j0), getW0(_Baked, uint4(2, 0, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i2, j1), getW0(_Baked, uint4(2, 1, 1, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn1, i2, j2), getW0(_Baked, uint4(2, 2, 1, k)), sum);
+                    sum += getImg(_Buffer, txImgIn1, i0, j0) * getW0(_Baked, uint4(0, 0, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i0, j1) * getW0(_Baked, uint4(0, 1, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i0, j2) * getW0(_Baked, uint4(0, 2, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i1, j0) * getW0(_Baked, uint4(1, 0, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i1, j1) * getW0(_Baked, uint4(1, 1, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i1, j2) * getW0(_Baked, uint4(1, 2, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i2, j0) * getW0(_Baked, uint4(2, 0, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i2, j1) * getW0(_Baked, uint4(2, 1, 1, k)) +
+                        getImg(_Buffer, txImgIn1, i2, j2) * getW0(_Baked, uint4(2, 2, 1, k));
 
-                    sum = mad(getImg(_Buffer, txImgIn2, i0, j0), getW0(_Baked, uint4(0, 0, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i0, j1), getW0(_Baked, uint4(0, 1, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i0, j2), getW0(_Baked, uint4(0, 2, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i1, j0), getW0(_Baked, uint4(1, 0, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i1, j1), getW0(_Baked, uint4(1, 1, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i1, j2), getW0(_Baked, uint4(1, 2, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i2, j0), getW0(_Baked, uint4(2, 0, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i2, j1), getW0(_Baked, uint4(2, 1, 2, k)), sum);
-                    sum = mad(getImg(_Buffer, txImgIn2, i2, j2), getW0(_Baked, uint4(2, 2, 2, k)), sum);
-
-                    // sum += getImg(_Buffer, txImgIn0, i0, j0) * getW0(_Baked, uint4(0, 0, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i0, j1) * getW0(_Baked, uint4(0, 1, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i0, j2) * getW0(_Baked, uint4(0, 2, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i1, j0) * getW0(_Baked, uint4(1, 0, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i1, j1) * getW0(_Baked, uint4(1, 1, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i1, j2) * getW0(_Baked, uint4(1, 2, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i2, j0) * getW0(_Baked, uint4(2, 0, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i2, j1) * getW0(_Baked, uint4(2, 1, 0, k)) +
-                    //     getImg(_Buffer, txImgIn0, i2, j2) * getW0(_Baked, uint4(2, 2, 0, k));
-                
-                    // sum += getImg(_Buffer, txImgIn1, i0, j0) * getW0(_Baked, uint4(0, 0, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i0, j1) * getW0(_Baked, uint4(0, 1, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i0, j2) * getW0(_Baked, uint4(0, 2, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i1, j0) * getW0(_Baked, uint4(1, 0, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i1, j1) * getW0(_Baked, uint4(1, 1, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i1, j2) * getW0(_Baked, uint4(1, 2, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i2, j0) * getW0(_Baked, uint4(2, 0, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i2, j1) * getW0(_Baked, uint4(2, 1, 1, k)) +
-                    //     getImg(_Buffer, txImgIn1, i2, j2) * getW0(_Baked, uint4(2, 2, 1, k));
-
-                    // sum += getImg(_Buffer, txImgIn2, i0, j0) * getW0(_Baked, uint4(0, 0, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i0, j1) * getW0(_Baked, uint4(0, 1, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i0, j2) * getW0(_Baked, uint4(0, 2, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i1, j0) * getW0(_Baked, uint4(1, 0, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i1, j1) * getW0(_Baked, uint4(1, 1, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i1, j2) * getW0(_Baked, uint4(1, 2, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i2, j0) * getW0(_Baked, uint4(2, 0, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i2, j1) * getW0(_Baked, uint4(2, 1, 2, k)) +
-                    //     getImg(_Buffer, txImgIn2, i2, j2) * getW0(_Baked, uint4(2, 2, 2, k));
+                    sum += getImg(_Buffer, txImgIn2, i0, j0) * getW0(_Baked, uint4(0, 0, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i0, j1) * getW0(_Baked, uint4(0, 1, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i0, j2) * getW0(_Baked, uint4(0, 2, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i1, j0) * getW0(_Baked, uint4(1, 0, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i1, j1) * getW0(_Baked, uint4(1, 1, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i1, j2) * getW0(_Baked, uint4(1, 2, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i2, j0) * getW0(_Baked, uint4(2, 0, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i2, j1) * getW0(_Baked, uint4(2, 1, 2, k)) +
+                        getImg(_Buffer, txImgIn2, i2, j2) * getW0(_Baked, uint4(2, 2, 2, k));
 
                     // for (uint l = 0; l < 3; l++)
                     // {
@@ -190,6 +181,7 @@
                 }
                 else if ((time + 2) % _FrameDelay == 0 && insideArea(txL1, px))
                 {
+                    // L1, kernel=3x3, stride=2, padding=valid
                     px -= txL1.xy;
                     uint i = px.y % 104;
                     uint j = px.x % 104;
@@ -220,6 +212,8 @@
                 }
                 else if ((time + 3) % _FrameDelay == 0 && insideArea(txL2, px))
                 {
+                    // L2, kernel=3x3, stride=1, padding=same
+                    // L2 output is split into two 104 x 104 x 32
                     px -= txL2.xy;
                     uint i = px.y % 104;
                     uint j = px.x % 104;
@@ -250,6 +244,7 @@
                 }
                 else if ((time + 4) % _FrameDelay == 0 && insideArea(txL3, px))
                 {
+                    // L3, kernel=3x3, stride=1, padding=same
                     px -= txL3.xy;
                     uint i = px.y % 104;
                     uint j = px.x % 104;
@@ -259,6 +254,7 @@
                     uint j0 = j, j1 = j0 + 1, j2 = j0 + 2;
                     float sum = 0.0;
 
+                    // Apply kernel to only the last 32 layers of L2
                     for (uint l = 0; l < 32; l++)
                     {
                         sum += getL2(_Buffer, uint3(i0, j0, l + 32)) * getW3(_Baked, uint4(0, 0, l, k)) +
@@ -280,6 +276,7 @@
                 }
                 else if ((time + 5) % _FrameDelay == 0 && insideArea(txL4, px))
                 {
+                    // L4, kernel=3x3, stride=1, padding=same
                     px -= txL4.xy;
                     uint i = px.y % 104;
                     uint j = px.x % 104;
@@ -310,6 +307,8 @@
                 }
                 else if ((time + 6) % _FrameDelay == 0 && insideArea(txL5, px))
                 {
+                    // L5, kernel=1x1, stride=1, padding=none
+                    // concat l4 and l3
                     px -= txL5.xy;
                     uint i = px.y % 104;
                     uint j = px.x % 104;
@@ -334,6 +333,8 @@
                 }
                 else if ((time + 6) % _FrameDelay == 0 && insideArea(txL5c52, px))
                 {
+                    // L5 concat, maxpool=2x2, stride=1
+                    // concat l5 and l2
                     px -= txL5c52.xy;
                     uint i = px.y % 52;
                     uint j = px.x % 52;
@@ -369,6 +370,8 @@
                 }
                 else if ((time + 7) % _FrameDelay == 0 && insideArea(txL6, px))
                 {
+                    // L6, kernel=3x3, stride=1, padding=same
+                    // L6 output is split into two 52 x 52 x 64
                     px -= txL6.xy;
                     uint i = px.y % 52;
                     uint j = px.x % 52;
@@ -399,6 +402,7 @@
                 }
                 else if ((time + 8) % _FrameDelay == 0 && insideArea(txL7, px))
                 {
+                    // L7, kernel=3x3, stride=1, padding=same
                     px -= txL7.xy;
                     uint i = px.y % 52;
                     uint j = px.x % 52;
@@ -408,6 +412,7 @@
                     uint j0 = j, j1 = j0 + 1, j2 = j0 + 2;
                     float sum = 0.0;
 
+                    // Apply kernel to only the last 64 layers of L6
                     for (uint l = 0; l < 64; l++)
                     {
                         sum += getL6(_Buffer, uint3(i0, j0, l + 64)) * getW7(_Baked, uint4(0, 0, l, k)) +
@@ -429,6 +434,7 @@
                 }
                 else if ((time + 9) % _FrameDelay == 0 && insideArea(txL8, px))
                 {
+                    // L8, kernel=3x3, stride=1, padding=same
                     px -= txL8.xy;
                     uint i = px.y % 52;
                     uint j = px.x % 52;
@@ -459,6 +465,8 @@
                 }
                 else if ((time + 10) % _FrameDelay == 0 && insideArea(txL9, px))
                 {
+                    // L9, kernel=1x1, stride=1, padding=none
+                    // concat l8 and l7
                     px -= txL9.xy;
                     uint i = px.y % 52;
                     uint j = px.x % 52;
@@ -483,6 +491,8 @@
                 }
                 else if ((time + 11) % _FrameDelay == 0 && insideArea(txL9c96, px))
                 {
+                    // L9 concat, maxpool=2x2, stride=1
+                    // concat l9 and l6
                     px -= txL9c96.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -518,6 +528,8 @@
                 }
                 else if ((time + 12) % _FrameDelay == 0 && insideArea(txL10, px))
                 {
+                    // L10, kernel=3x3, stride=1, padding=same
+                    // L10 output is split into two 26 x 26 x 128
                     px -= txL10.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -548,6 +560,7 @@
                 }
                 else if ((time + 13) % _FrameDelay == 0 && insideArea(txL11, px))
                 {
+                    // L11, kernel=3x3, stride=1, padding=same
                     px -= txL11.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -557,6 +570,7 @@
                     uint j0 = j, j1 = j0 + 1, j2 = j0 + 2;
                     float sum = 0.0;
 
+                    // Apply kernel to only the last 128 layers of L10
                     for (uint l = 0; l < 128; l++)
                     {
                         sum += getL10(_Buffer, uint3(i0, j0, l + 128)) * getW11(_Baked, uint4(0, 0, l, k)) +
@@ -578,6 +592,7 @@
                 }
                 else if ((time + 14) % _FrameDelay == 0 && insideArea(txL12, px))
                 {
+                    // L12, kernel=3x3, stride=1, padding=same
                     px -= txL12.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -608,6 +623,8 @@
                 }
                 else if ((time + 15) % _FrameDelay == 0 && insideArea(txL13, px))
                 {
+                    // L13, kernel=1x1, stride=1, padding=none
+                    // concat l12 and l11
                     px -= txL13.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -632,6 +649,8 @@
                 }
                 else if ((time + 16) % _FrameDelay == 0 && insideArea(txL13c1310, px))
                 {
+                    // L13 concat, maxpool=2x2, stride=1
+                    // concat l13 and 10
                     px -= txL13c1310.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -667,6 +686,7 @@
                 }
                 else if ((time + 17) % _FrameDelay == 0 && insideArea(txL14, px))
                 {
+                    // L14, kernel=3x3, stride=1, padding=same
                     px -= txL14.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -689,10 +709,15 @@
                             getL13c1310(_Buffer, uint3(i2, j2, l)) * getW14(_Baked, uint4(2, 2, l, k));
                     }
 
+                    // split the big loop into two steps
+                    // no normalize here
+
                     col.r = sum;
                 }
                 else if ((time + 18) % _FrameDelay == 0 && insideArea(txL14_2, px))
                 {
+                    // L14, kernel=3x3, stride=1, padding=same
+                    // keep going from last step
                     px -= txL14_2.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -723,6 +748,7 @@
                 }
                 else if ((time + 19) % _FrameDelay == 0 && insideArea(txL15, px))
                 {
+                    // L15, kernel=1x1, stride=1, padding=none
                     px -= txL15.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -742,6 +768,7 @@
                 }
                 else if ((time + 20) % _FrameDelay == 0 && insideArea(txL18, px))
                 {
+                    // L18, kernel=1x1, stride=1, padding=none
                     px -= txL18.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -761,6 +788,10 @@
                 }
                 else if ((time + 21) % _FrameDelay == 0 && insideArea(txL18bu, px))
                 {
+                    // L18, bilinear upscale
+                    // My implementation of bilinear upscaling differs from
+                    // the tensorflow implementation's output
+                    // the slight variation doesn't affect the output too much
                     px -= txL18bu.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -787,6 +818,8 @@
                 }
                 else if ((time + 22) % _FrameDelay == 0 && insideArea(txL19, px))
                 {
+                    // L19, kernel=3x3, stride=1, padding=same
+                    // concat l18 and l3
                     px -= txL19.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -830,6 +863,8 @@
                 }
                 else if ((time + 21) % _FrameDelay == 0 && insideArea(txL16, px))
                 {
+                    // L16, kernel=3x3, stride=1, padding=same
+                    // This is where the network starts splitting off into two outputs
                     px -= txL16.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -860,6 +895,8 @@
                 }
                 else if ((time + 23) % _FrameDelay == 0 && insideArea(txL20, px))
                 {
+                    // L20, kernel=1x1, stride=1, padding=none
+                    // The 26x26 grid output
                     px -= txL20.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -878,6 +915,8 @@
                 }
                 else if ((time + 23) % _FrameDelay == 0 && insideArea(txL17, px))
                 {
+                    // L17, kernel=1x1, stride=1, padding=none
+                    // The 13x13 grid output
                     px -= txL17.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;
@@ -896,6 +935,11 @@
                 }
                 else if ((time + 24) % _FrameDelay == 0 && insideArea(txL20_2, px))
                 {
+                    // Decode the 26x26 outputs
+                    // Offset the bounding boxes based on grid
+                    // Scale the boxes with exp() + anchors
+                    // Apply sigmoid on the 80 classes probability and
+                    // bounding box confidence
                     px -= txL20_2.xy;
                     uint i = px.y % 26;
                     uint j = px.x % 26;
@@ -912,6 +956,11 @@
                 }
                 else if ((time + 24) % _FrameDelay == 0 && insideArea(txL17_2, px))
                 {
+                    // Decode the 13x13 outputs
+                    // Offset the bounding boxes based on grid
+                    // Scale the boxes with exp() + anchors
+                    // Apply sigmoid on the 80 classes probability and
+                    // bounding box confidence
                     px -= txL17_2.xy;
                     uint i = px.y % 13;
                     uint j = px.x % 13;

@@ -1,16 +1,16 @@
-﻿Shader "YOLOv4Tiny/debug"
+﻿Shader "YOLOv4Tiny/poster"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Ramp ("Ramp", 2D) = "white" {}
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderQueue"="Transparent" }
+        Blend SrcAlpha OneMinusSrcAlpha
         LOD 100
         Cull Off
-        
+
         Pass
         {
             CGPROGRAM
@@ -37,8 +37,6 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-            sampler2D _Ramp;
-
             v2f vert (appdata v)
             {
                 v2f o;
@@ -51,8 +49,9 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                float fval = (tanh(tex2D(_MainTex, i.uv).r) + 1.0) * 0.5;
-                fixed4 col = tex2D(_Ramp, float2(fval, 0.5));
+                fixed4 col = tex2D(_MainTex, i.uv);
+                col.rgb *= col.a;
+                clip(col.a - 0.1);
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

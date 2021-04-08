@@ -488,3 +488,4 @@ FodyWeavers.xsd
 # Other
 *.npz
 *.h5
+*.kra

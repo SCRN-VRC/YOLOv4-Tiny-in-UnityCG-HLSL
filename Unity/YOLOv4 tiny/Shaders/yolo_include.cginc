@@ -81,6 +81,8 @@
 #define ALPHA 0.1
 #define EPS 0.001
 
+// Default anchor positions for each cell
+// tiny network only has 2 layers of 3
 static const float anchors[2][3][2] =
 {
     23,27,
@@ -92,24 +94,24 @@ static const float anchors[2][3][2] =
     344,319
 };
 
-float testGen(uint3 pos)
-{
-    float r;
-    if(pos.x > 416 || pos.y > 416) return 0.0;
-    if (pos.z == 0)
-        r = (pos.x / 415.0) * (pos.y / 415.0);
-    else if (pos.z == 1)
-        r = ((415.0 - pos.x) / 415.0) * (pos.y /  415.0);
-    else
-        r = (pos.x / 415.0) * ((415.0 - pos.y) /  415.0);
-    return r;
-}
+// float testGen(uint3 pos)
+// {
+//     float r;
+//     if(pos.x > 416 || pos.y > 416) return 0.0;
+//     if (pos.z == 0)
+//         r = (pos.x / 415.0) * (pos.y / 415.0);
+//     else if (pos.z == 1)
+//         r = ((415.0 - pos.x) / 415.0) * (pos.y /  415.0);
+//     else
+//         r = (pos.x / 415.0) * ((415.0 - pos.y) /  415.0);
+//     return r;
+// }
 
-float test(uint3 pos)
-{
-    if (pos.x == 0 || pos.y == 0) return 0.0;
-    return testGen(uint3(pos.xy - 1, pos.z));
-}
+// float test(uint3 pos)
+// {
+//     if (pos.x == 0 || pos.y == 0) return 0.0;
+//     return testGen(uint3(pos.xy - 1, pos.z));
+// }
 
 void pR(inout float2 p, float a) {
     p = cos(a)*p + sin(a)*float2(p.y, -p.x);
