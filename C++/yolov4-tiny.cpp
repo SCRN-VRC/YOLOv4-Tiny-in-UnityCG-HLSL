@@ -1738,7 +1738,7 @@ int main() {
 	   // }
     //}
 
-    string PATH = "D:\\Storage\\Unity\\yolov4-tiny\\data\\yolov4-tiny.bin";
+    string PATH = "D:\\Storage\\Unity\\yolov4-tiny\\data\\yolov4-tiny.bytes";
     yolov4tiny yolo = yolov4tiny(PATH, 0.001f, 0.1f);
     yolo.forwardProp(imgArray);
     yolo.drawBbox(org_img);
