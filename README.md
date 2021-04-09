@@ -26,7 +26,7 @@ This implementation is based on the TensorFlow version from https://github.com/h
 1. Frame Delay - How much time each layer waits to update. Default value is 3, the lower it is the more GPU intensive it is.
 
 **nms.shader**
-1. Confidence Threshold - The cut off point for which the bounding boxes will be culled. Default value is 3. Lowering this value will increase the boxes but also increase the error rate.
+1. Confidence Threshold - The cut off point for which the bounding boxes will be culled. Default value is 0.5. Lowering this value will increase the boxes but also increase the error rate.
 
 ### Reading the Output
 The basic setup is: **yolov4tiny.shader** -> **nms.shader** -> **output.shader**. To read the bounding boxes information, we loop through the output of **nms.shader**
