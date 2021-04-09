@@ -57,6 +57,7 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, fs.uv);
+                float Confidence = _NMSout[txConfidence.xy].r;
                 const float2 scale = 0.5.xx;
 
                 uint i;
@@ -69,7 +70,7 @@
                         uint4 buff = asuint(_NMSout[txL20nms.xy + uint2(i, j)]);
                         float conf = f16tof32(buff.a);
                         [branch]
-                        if (conf > 0.5) {
+                        if (conf > Confidence) {
                             // Class, 0 to 79
                             float c = f16tof32(buff.b >> 16);
                             // x, y is the center position of the
@@ -109,7 +110,7 @@
                         uint4 buff = asuint(_NMSout[txL17nms.xy + uint2(i, j)]);
                         float conf = f16tof32(buff.a);
                         [branch]
-                        if (conf > 0.5) {
+                        if (conf > Confidence) {
                             // Class, 0 to 79
                             float c = f16tof32(buff.b >> 16);
                             // x, y is the center position of the
@@ -149,4 +150,5 @@
             ENDCG
         }
     }
+    Fallback "Standard"
 }

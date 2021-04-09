@@ -7,6 +7,7 @@
 #define txL17simp                    uint4( 0 , 26 , 13 , 13 )
 #define txL20nms                    uint4( 26 , 0 , 26 , 26 )
 #define txL17nms                    uint4( 13 , 26 , 13 , 13 )
+#define txConfidence                uint4(63, 63, 1, 1)
 
 static const uint4 f16zero = asuint(f32tof16(0.0)).xxxx;
 

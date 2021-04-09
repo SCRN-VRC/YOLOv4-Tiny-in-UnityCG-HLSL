@@ -20,6 +20,7 @@ Shader "YOLOv4Tiny/nms"
     {
         _YOLOout ("YOLO Output", 2D) = "black" {}
         _Buffer ("Buffer", 2D) = "black" {}
+        _Confidence ("Confidence Threshold", Range(0, 1)) = 0.5
         _MaxDist ("Max Distance", Float) = 0.02
     }
     SubShader
@@ -62,6 +63,7 @@ Shader "YOLOv4Tiny/nms"
 
             float4 _Buffer_TexelSize;
             float _MaxDist;
+            float _Confidence;
 
             v2f vert (appdata v)
             {
@@ -174,7 +176,7 @@ Shader "YOLOv4Tiny/nms"
 
                     uint4 curBuf = asuint(_Buffer[txL20simp + px]);
                     float myConf = f16tof32(curBuf.a);
-                    if (myConf > 0.5) {
+                    if (myConf > _Confidence) {
                         float myClass = f16tof32(curBuf.b >> 16);
                         float x = f16tof32(curBuf.r >> 16);
                         float y = f16tof32(curBuf.r);
@@ -187,7 +189,7 @@ Shader "YOLOv4Tiny/nms"
                         uint j;
                         for (i = 0; i < 26; i++) {
                             for (j = 0; j < 26; j++) {
-                                //if (myConf < 0.5) return f16zero;
+                                if (myConf <= _Confidence) return f16zero;
                                 uint4 buff = asuint(_Buffer[txL20simp + uint2(i, j)]);
                                 float bclass = f16tof32(buff.b >> 16);
                                 float conf = f16tof32(buff.a);
@@ -206,7 +208,7 @@ Shader "YOLOv4Tiny/nms"
 
                         for (i = 0; i < 13; i++) {
                             for (j = 0; j < 13; j++) {
-                                //if (myConf < 0.5) return f16zero;
+                                if (myConf <= _Confidence) return f16zero;
                                 uint4 buff = asuint(_Buffer[txL17simp + uint2(i, j)]);
                                 float bclass = f16tof32(buff.b >> 16);
                                 float conf = f16tof32(buff.a);
@@ -238,7 +240,7 @@ Shader "YOLOv4Tiny/nms"
 
                     uint4 curBuf = asuint(_Buffer[txL17simp + px]);
                     float myConf = f16tof32(curBuf.a);
-                    if (myConf > 0.5) {
+                    if (myConf > _Confidence) {
                         float myClass = f16tof32(curBuf.b >> 16);
                         float x = f16tof32(curBuf.r >> 16);
                         float y = f16tof32(curBuf.r);
@@ -251,7 +253,7 @@ Shader "YOLOv4Tiny/nms"
                         uint j;
                         for (i = 0; i < 26; i++) {
                             for (j = 0; j < 26; j++) {
-                                //if (myConf < 0.5) return f16zero;
+                                if (myConf <= _Confidence) return f16zero;
                                 uint4 buff = asuint(_Buffer[txL20simp + uint2(i, j)]);
                                 float conf = f16tof32(buff.a);
                                 float bclass = f16tof32(buff.b >> 16);
@@ -270,7 +272,7 @@ Shader "YOLOv4Tiny/nms"
 
                         for (i = 0; i < 13; i++) {
                             for (j = 0; j < 13; j++) {
-                                //if (myConf < 0.5) return f16zero;
+                                if (myConf <= _Confidence) return f16zero;
                                 uint4 buff = asuint(_Buffer[txL17simp + uint2(i, j)]);
                                 float conf = f16tof32(buff.a);
                                 float bclass = f16tof32(buff.b >> 16);
@@ -305,6 +307,7 @@ Shader "YOLOv4Tiny/nms"
                     // }
                     // buffer[0] = c;
                 }
+                else if (insideArea(txConfidence, px)) return _Confidence.rrrr;
 
                 return col;
             }
