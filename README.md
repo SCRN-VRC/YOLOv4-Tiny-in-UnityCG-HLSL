@@ -10,11 +10,13 @@ My naive implementation only runs around 30 FPS so it doesn't hog resources for 
 
 This implementation is based on the TensorFlow version from https://github.com/hunglc007/tensorflow-yolov4-tflite
 
+### NOTE: This was built and tested with Unity 2018.4.20f1, there may be shader compatibility issues with other versions.
 ## Setup
 1. Download the package from Release
 2. Import
-3. Done, no dependencies
-4. Enter Play Mode to run the network
+3. Open scene in the Scenes folder
+4. Done, no dependencies
+5. Enter Play Mode to run the network
 
 ## Avatars
 1. Look in the Prefabs folder
