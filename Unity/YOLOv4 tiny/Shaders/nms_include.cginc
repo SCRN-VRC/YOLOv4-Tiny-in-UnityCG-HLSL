@@ -7,7 +7,9 @@
 #define txL17simp                    uint4( 0 , 26 , 13 , 13 )
 #define txL20nms                    uint4( 26 , 0 , 26 , 26 )
 #define txL17nms                    uint4( 13 , 26 , 13 , 13 )
-#define txConfidence                uint4(63, 63, 1, 1)
+
+#define txConfidence                uint2( 63, 63 )
+#define txTimeDeltaLayerNMS         uint2( 62, 63 )
 
 static const uint4 f16zero = asuint(f32tof16(0.0)).xxxx;
 
@@ -64,5 +66,12 @@ float4 HueShift (in float3 Color, in float Shift)
     
     return float4(Color,1.0);
 }
+
+inline void StoreValue(in uint2 txPos, in float4 value, inout uint4 col,
+    in uint2 fragPos)
+{
+    col = all(fragPos == txPos) ? asuint(value) : col;
+}
+
 
 #endif

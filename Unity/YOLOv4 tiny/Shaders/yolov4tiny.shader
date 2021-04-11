@@ -23,7 +23,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
         _CamIn ("Cam Input", 2D) = "white" {}
         _Buffer ("Buffer", 2D) = "black" {}
         _Baked ("Baked Params", 2D) = "black" {}
-        _FrameDelay ("Frame Delay", Range(1, 20)) = 3
+        _FPS ("Network FPS", Range(15, 90)) = 90
         _MaxDist ("Max Distance", Float) = 0.02
     }
     SubShader
@@ -65,7 +65,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
             Texture2D<float> _Baked;
             float4 _Buffer_TexelSize;
             float _MaxDist;
-            uint _FrameDelay;
+            float _FPS;
 
             v2f vert (appdata v)
             {
@@ -88,13 +88,20 @@ Shader "YOLOv4Tiny/yolov4tiny"
                 uint2 px = i.uv.xy * _Buffer_TexelSize.zw;
                 
                 float col = _Buffer[px];
-                uint time = floor(_Time.y * 90);
+                float timeDelta = _Buffer[txTimeDelta];
+                uint layerCounter = floor(_Buffer[txLayerCounter]);
+                
+                const float period = (1.0 / _FPS);
+                layerCounter = timeDelta < period ? layerCounter : layerCounter + 1;
+                layerCounter = layerCounter % 27;
+                timeDelta = timeDelta < period ? timeDelta : (timeDelta - period);
+                timeDelta += clamp(unity_DeltaTime.x, 0.0, period);
 
                 // Split up the RGB channels cause it's a 1 channel texture
                 // The input is rotated by 90 degrees cause 0, 0 origin is
                 // different in cg/HLSL from OpenCV and tensorflow
                 [branch]
-                if ((time % _FrameDelay) == 0 && insideArea(txImgIn0, px))
+                if (layerCounter == 0 && insideArea(txImgIn0, px))
                 {
                     px -= txImgIn0.xy;
                     float2 iuv = px / float2(txImgIn0.zw) - 0.5;
@@ -102,7 +109,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     iuv += 0.5;
                     col.r = tex2D(_CamIn, iuv).r;
                 }
-                else if ((time % _FrameDelay) == 0 && insideArea(txImgIn1, px))
+                else if (layerCounter == 0 && insideArea(txImgIn1, px))
                 {
                     px -= txImgIn1.xy;
                     float2 iuv = px / float2(txImgIn1.zw) - 0.5;
@@ -110,7 +117,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     iuv += 0.5;
                     col.r = tex2D(_CamIn, iuv).g;
                 }
-                else if ((time % _FrameDelay) == 0 && insideArea(txImgIn2, px))
+                else if (layerCounter == 0 && insideArea(txImgIn2, px))
                 {
                     px -= txImgIn2.xy;
                     float2 iuv = px / float2(txImgIn2.zw) - 0.5;
@@ -118,7 +125,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     iuv += 0.5;
                     col.r = tex2D(_CamIn, iuv).b;
                 }
-                else if ((time + 1) % _FrameDelay == 0 && insideArea(txL0, px))
+                else if (layerCounter == 1 && insideArea(txL0, px))
                 {
                     // L0, kernel=3x3, stride=2, padding=valid
                     px -= txL0.xy;
@@ -179,7 +186,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 200 && j == 187 && k == 17) buffer[0] = col.rrrr;
                 }
-                else if ((time + 2) % _FrameDelay == 0 && insideArea(txL1, px))
+                else if (layerCounter == 2 && insideArea(txL1, px))
                 {
                     // L1, kernel=3x3, stride=2, padding=valid
                     px -= txL1.xy;
@@ -210,7 +217,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 100 && j == 54 && k == 21) buffer[0] = col.rrrr;
                 }
-                else if ((time + 3) % _FrameDelay == 0 && insideArea(txL2, px))
+                else if (layerCounter == 3 && insideArea(txL2, px))
                 {
                     // L2, kernel=3x3, stride=1, padding=same
                     // L2 output is split into two 104 x 104 x 32
@@ -242,7 +249,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 51 && j == 27 && k == 55) buffer[0] = col.rrrr;
                 }
-                else if ((time + 4) % _FrameDelay == 0 && insideArea(txL3, px))
+                else if (layerCounter == 4 && insideArea(txL3, px))
                 {
                     // L3, kernel=3x3, stride=1, padding=same
                     px -= txL3.xy;
@@ -274,7 +281,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 100 && j == 54 && k == 21) buffer[0] = col.rrrr;
                 }
-                else if ((time + 5) % _FrameDelay == 0 && insideArea(txL4, px))
+                else if (layerCounter == 5 && insideArea(txL4, px))
                 {
                     // L4, kernel=3x3, stride=1, padding=same
                     px -= txL4.xy;
@@ -305,7 +312,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 100 && j == 101 && k == 31) buffer[0] = col.rrrr;
                 }
-                else if ((time + 6) % _FrameDelay == 0 && insideArea(txL5, px))
+                else if (layerCounter == 6 && insideArea(txL5, px))
                 {
                     // L5, kernel=1x1, stride=1, padding=none
                     // concat l4 and l3
@@ -331,7 +338,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 100 && j == 101 && k == 31) buffer[0] = col.rrrr;
                 }
-                else if ((time + 6) % _FrameDelay == 0 && insideArea(txL5c52, px))
+                else if (layerCounter == 7 && insideArea(txL5c52, px))
                 {
                     // L5 concat, maxpool=2x2, stride=1
                     // concat l5 and l2
@@ -368,7 +375,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     //     buffer[0].a = getL2NoPad(_Buffer, uint3(103, 55, 1));
                     //}
                 }
-                else if ((time + 7) % _FrameDelay == 0 && insideArea(txL6, px))
+                else if (layerCounter == 8 && insideArea(txL6, px))
                 {
                     // L6, kernel=3x3, stride=1, padding=same
                     // L6 output is split into two 52 x 52 x 64
@@ -400,7 +407,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 51 && j == 50 && k == 31) buffer[0] = col.rrrr;
                 }
-                else if ((time + 8) % _FrameDelay == 0 && insideArea(txL7, px))
+                else if (layerCounter == 9 && insideArea(txL7, px))
                 {
                     // L7, kernel=3x3, stride=1, padding=same
                     px -= txL7.xy;
@@ -432,7 +439,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 1 && j == 12 && k == 55) buffer[0] = col.rrrr;
                 }
-                else if ((time + 9) % _FrameDelay == 0 && insideArea(txL8, px))
+                else if (layerCounter == 10 && insideArea(txL8, px))
                 {
                     // L8, kernel=3x3, stride=1, padding=same
                     px -= txL8.xy;
@@ -463,7 +470,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 1 && j == 12 && k == 55) buffer[0] = col.rrrr;
                 }
-                else if ((time + 10) % _FrameDelay == 0 && insideArea(txL9, px))
+                else if (layerCounter == 11 && insideArea(txL9, px))
                 {
                     // L9, kernel=1x1, stride=1, padding=none
                     // concat l8 and l7
@@ -489,7 +496,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 100 && j == 101 && k == 31) buffer[0] = col.rrrr;
                 }
-                else if ((time + 11) % _FrameDelay == 0 && insideArea(txL9c96, px))
+                else if (layerCounter == 12 && insideArea(txL9c96, px))
                 {
                     // L9 concat, maxpool=2x2, stride=1
                     // concat l9 and l6
@@ -526,7 +533,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     //     buffer[0].a = getL2NoPad(_Buffer, uint3(103, 55, 1));
                     // }
                 }
-                else if ((time + 12) % _FrameDelay == 0 && insideArea(txL10, px))
+                else if (layerCounter == 13 && insideArea(txL10, px))
                 {
                     // L10, kernel=3x3, stride=1, padding=same
                     // L10 output is split into two 26 x 26 x 128
@@ -558,7 +565,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 1 && j == 12 && k == 55) buffer[0] = col.rrrr;
                 }
-                else if ((time + 13) % _FrameDelay == 0 && insideArea(txL11, px))
+                else if (layerCounter == 14 && insideArea(txL11, px))
                 {
                     // L11, kernel=3x3, stride=1, padding=same
                     px -= txL11.xy;
@@ -590,7 +597,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 25 && j == 12 && k == 120) buffer[0] = col.rrrr;
                 }
-                else if ((time + 14) % _FrameDelay == 0 && insideArea(txL12, px))
+                else if (layerCounter == 15 && insideArea(txL12, px))
                 {
                     // L12, kernel=3x3, stride=1, padding=same
                     px -= txL12.xy;
@@ -621,7 +628,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 25 && j == 12 && k == 111) buffer[0] = col.rrrr;
                 }
-                else if ((time + 15) % _FrameDelay == 0 && insideArea(txL13, px))
+                else if (layerCounter == 16 && insideArea(txL13, px))
                 {
                     // L13, kernel=1x1, stride=1, padding=none
                     // concat l12 and l11
@@ -647,7 +654,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 25 && j == 24 && k == 250) buffer[0] = col.rrrr;
                 }
-                else if ((time + 16) % _FrameDelay == 0 && insideArea(txL13c1310, px))
+                else if (layerCounter == 17 && insideArea(txL13c1310, px))
                 {
                     // L13 concat, maxpool=2x2, stride=1
                     // concat l13 and 10
@@ -684,7 +691,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     //     buffer[0].a = getL2NoPad(_Buffer, uint3(103, 55, 1));
                     // }
                 }
-                else if ((time + 17) % _FrameDelay == 0 && insideArea(txL14, px))
+                else if (layerCounter == 18 && insideArea(txL14, px))
                 {
                     // L14, kernel=3x3, stride=1, padding=same
                     px -= txL14.xy;
@@ -714,7 +721,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
 
                     col.r = sum;
                 }
-                else if ((time + 18) % _FrameDelay == 0 && insideArea(txL14_2, px))
+                else if (layerCounter == 19 && insideArea(txL14_2, px))
                 {
                     // L14, kernel=3x3, stride=1, padding=same
                     // keep going from last step
@@ -746,7 +753,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 12 && j == 11 && k == 510) buffer[0] = col.rrrr;
                 }
-                else if ((time + 19) % _FrameDelay == 0 && insideArea(txL15, px))
+                else if (layerCounter == 20 && insideArea(txL15, px))
                 {
                     // L15, kernel=1x1, stride=1, padding=none
                     px -= txL15.xy;
@@ -766,7 +773,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 11 && j == 12 && k == 251) buffer[0] = col.rrrr;
                 }
-                else if ((time + 20) % _FrameDelay == 0 && insideArea(txL18, px))
+                else if (layerCounter == 21 && insideArea(txL18, px))
                 {
                     // L18, kernel=1x1, stride=1, padding=none
                     px -= txL18.xy;
@@ -786,7 +793,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 11 && j == 12 && k == 120) buffer[0] = col.rrrr;
                 }
-                else if ((time + 21) % _FrameDelay == 0 && insideArea(txL18bu, px))
+                else if (layerCounter == 22 && insideArea(txL18bu, px))
                 {
                     // L18, bilinear upscale
                     // My implementation of bilinear upscaling differs from
@@ -816,7 +823,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = lerp(ta, tb, fplj);
                     //if (i == 19 && j == 25 && k == 101) buffer[0] = col.rrrr;
                 }
-                else if ((time + 22) % _FrameDelay == 0 && insideArea(txL19, px))
+                else if (layerCounter == 23 && insideArea(txL19, px))
                 {
                     // L19, kernel=3x3, stride=1, padding=same
                     // concat l18 and l3
@@ -861,7 +868,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 19 && j == 25 && k == 241) buffer[0] = col.rrrr;
                 }
-                else if ((time + 21) % _FrameDelay == 0 && insideArea(txL16, px))
+                else if (layerCounter == 22 && insideArea(txL16, px))
                 {
                     // L16, kernel=3x3, stride=1, padding=same
                     // This is where the network starts splitting off into two outputs
@@ -893,7 +900,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 10 && j == 11 && k == 511) buffer[0] = col.rrrr;
                 }
-                else if ((time + 23) % _FrameDelay == 0 && insideArea(txL20, px))
+                else if (layerCounter == 24 && insideArea(txL20, px))
                 {
                     // L20, kernel=1x1, stride=1, padding=none
                     // The 26x26 grid output
@@ -913,7 +920,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 21 && j == 19 && k == 212) buffer[0] = col.rrrr;
                 }
-                else if ((time + 23) % _FrameDelay == 0 && insideArea(txL17, px))
+                else if (layerCounter == 24 && insideArea(txL17, px))
                 {
                     // L17, kernel=1x1, stride=1, padding=none
                     // The 13x13 grid output
@@ -933,7 +940,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sum;
                     //if (i == 11 && j == 5 && k == 212) buffer[0] = col.rrrr;
                 }
-                else if ((time + 24) % _FrameDelay == 0 && insideArea(txL20_2, px))
+                else if (layerCounter == 25 && insideArea(txL20_2, px))
                 {
                     // Decode the 26x26 outputs
                     // Offset the bounding boxes based on grid
@@ -954,7 +961,7 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     col.r = sigmoidOrExp ? sigmoid(col.r) : (exp(col.r) * anchors[0][l][m - 2]);
                     col.r = scale ? ((col.r * 1.05 - 0.025 + grid) * 16.0) : col.r;
                 }
-                else if ((time + 24) % _FrameDelay == 0 && insideArea(txL17_2, px))
+                else if (layerCounter == 26 && insideArea(txL17_2, px))
                 {
                     // Decode the 13x13 outputs
                     // Offset the bounding boxes based on grid
@@ -980,6 +987,10 @@ Shader "YOLOv4Tiny/yolov4tiny"
                     // buffer[0].y = decodeL17(_Buffer, uint4(5, 8, 2, 3)).x;
                     // buffer[0].z = decodeL17(_Buffer, uint4(11, 8, 3, 83)).x;
                 }
+
+                StoreValue(txTimeDelta, timeDelta, col, px);
+                StoreValue(txLayerCounter, layerCounter, col, px);
+                StoreValue(txPeriod, period, col, px);
                 return col;
             }
             ENDCG

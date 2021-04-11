@@ -57,7 +57,7 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, fs.uv);
-                float Confidence = _NMSout[txConfidence.xy].r;
+                float Confidence = asfloat(_NMSout[txConfidence.xy].r);
                 const float2 scale = 0.5.xx;
 
                 uint i;

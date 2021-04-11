@@ -86,9 +86,15 @@ Shader "YOLOv4Tiny/nms"
                 uint2 px = fs.uv.xy * _Buffer_TexelSize.zw;
                 
                 uint4 col = asuint(_Buffer[px]);
-                uint time = mod(floor(_Time.y * 60), 5.0);
+                float period = _YOLOout[txPeriod];
+                float timeDelta = asfloat(_Buffer[txTimeDeltaLayerNMS].r);
+                uint layerCounter = asfloat(_Buffer[txTimeDeltaLayerNMS].g);
+                layerCounter = timeDelta < period ? layerCounter : layerCounter + 1;
+                layerCounter = layerCounter % 4;
+                timeDelta = timeDelta < period ? timeDelta : (timeDelta - period);
+                timeDelta += clamp(unity_DeltaTime.x, 0.0, period);
 
-                if (time == 0 && insideArea(txL20simp, px))
+                if (layerCounter == 0 && insideArea(txL20simp, px))
                 {
                     // Reshape the output data into something more manageable
                     // for the comparisons
@@ -127,7 +133,7 @@ Shader "YOLOv4Tiny/nms"
                     col.b |= asuint(f32tof16(bestProb));
                     col.a = asuint(f32tof16(conf0));
                 }
-                else if (time == 1 && insideArea(txL17simp, px))
+                else if (layerCounter == 1 && insideArea(txL17simp, px))
                 {
                     // Reshape the output data into something more manageable
                     // for the comparisons
@@ -166,7 +172,7 @@ Shader "YOLOv4Tiny/nms"
                     col.b |= asuint(f32tof16(bestProb));
                     col.a = asuint(f32tof16(conf0));
                 }
-                else if (time == 2 && insideArea(txL20nms, px))
+                else if (layerCounter == 2 && insideArea(txL20nms, px))
                 {
                     // Compare current bbox with every other bbox
                     // If there exists a bbox that's the same class,
@@ -230,7 +236,7 @@ Shader "YOLOv4Tiny/nms"
                     }
                     else col.a = f16zero.r;
                 }
-                else if (time == 3 && insideArea(txL17nms, px))
+                else if (layerCounter == 3 && insideArea(txL17nms, px))
                 {
                     // Compare current bbox with every other bbox
                     // If there exists a bbox that's the same class,
@@ -307,8 +313,9 @@ Shader "YOLOv4Tiny/nms"
                     // }
                     // buffer[0] = c;
                 }
-                else if (insideArea(txConfidence, px)) return _Confidence.rrrr;
 
+                StoreValue(txConfidence, _Confidence.rrrr, col, px);
+                StoreValue(txTimeDeltaLayerNMS, float4(timeDelta, layerCounter, 0, 0), col, px);
                 return col;
             }
             ENDCG

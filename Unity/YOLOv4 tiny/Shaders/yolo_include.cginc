@@ -78,8 +78,14 @@
 #define txWN3                    uint4( 480 , 4060 , 32 , 4 )
 #define txWN4                    uint4( 0 , 4077 , 32 , 4 )
 
+#define txTimeDelta              uint2( 2919, 2919 )
+#define txLayerCounter           uint2( 2918, 2919 )
+#define txPeriod                 uint2( 2917, 2919 )
+
 #define ALPHA 0.1
 #define EPS 0.001
+
+#define mod(x,y) ((x)-(y)*floor((x)/(y))) // glsl mod
 
 // Default anchor positions for each cell
 // tiny network only has 2 layers of 3
@@ -112,6 +118,12 @@ static const float anchors[2][3][2] =
 //     if (pos.x == 0 || pos.y == 0) return 0.0;
 //     return testGen(uint3(pos.xy - 1, pos.z));
 // }
+
+inline void StoreValue(in uint2 txPos, in float value, inout float col,
+    in uint2 fragPos)
+{
+    col = all(fragPos == txPos) ? value : col;
+}
 
 void pR(inout float2 p, float a) {
     p = cos(a)*p + sin(a)*float2(p.y, -p.x);
