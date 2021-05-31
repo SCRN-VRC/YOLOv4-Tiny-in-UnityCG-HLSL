@@ -11,260 +11,260 @@
     - SCRN
 
 __________________________________________________________________________________________________
-Layer (type)                    Output Shape         Param #     Connected to                     
+Layer (type)                    Output Shape         Param #     Connected to
 ==================================================================================================
-input_1 (InputLayer)            [(None, 416, 416, 3) 0                                            
+input_1 (InputLayer)            [(None, 416, 416, 3) 0
 __________________________________________________________________________________________________
-zero_padding2d (ZeroPadding2D)  (None, 417, 417, 3)  0           input_1[0][0]                    
+zero_padding2d (ZeroPadding2D)  (None, 417, 417, 3)  0           input_1[0][0]
 __________________________________________________________________________________________________
-conv2d (Conv2D) 2               (None, 208, 208, 32) 864         zero_padding2d[0][0]             
+conv2d (Conv2D) 2               (None, 208, 208, 32) 864         zero_padding2d[0][0]
 __________________________________________________________________________________________________
-batch_normalization (BatchNorma (None, 208, 208, 32) 128         conv2d[0][0]                     
+batch_normalization (BatchNorma (None, 208, 208, 32) 128         conv2d[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu (TensorFl [(None, 208, 208, 32 0           batch_normalization[0][0]        
+tf_op_layer_LeakyRelu (TensorFl [(None, 208, 208, 32 0           batch_normalization[0][0]
 __________________________________________________________________________________________________
-zero_padding2d_1 (ZeroPadding2D (None, 209, 209, 32) 0           tf_op_layer_LeakyRelu[0][0]      
+zero_padding2d_1 (ZeroPadding2D (None, 209, 209, 32) 0           tf_op_layer_LeakyRelu[0][0]
 __________________________________________________________________________________________________
-conv2d_1 (Conv2D) 6             (None, 104, 104, 64) 18432       zero_padding2d_1[0][0]           
+conv2d_1 (Conv2D) 6             (None, 104, 104, 64) 18432       zero_padding2d_1[0][0]
 __________________________________________________________________________________________________
-batch_normalization_1 (BatchNor (None, 104, 104, 64) 256         conv2d_1[0][0]                   
+batch_normalization_1 (BatchNor (None, 104, 104, 64) 256         conv2d_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_1 (Tensor [(None, 104, 104, 64 0           batch_normalization_1[0][0]      
+tf_op_layer_LeakyRelu_1 (Tensor [(None, 104, 104, 64 0           batch_normalization_1[0][0]
 __________________________________________________________________________________________________
-conv2d_2 (Conv2D) 9             (None, 104, 104, 64) 36864       tf_op_layer_LeakyRelu_1[0][0]    
+conv2d_2 (Conv2D) 9             (None, 104, 104, 64) 36864       tf_op_layer_LeakyRelu_1[0][0]
 __________________________________________________________________________________________________
-batch_normalization_2 (BatchNor (None, 104, 104, 64) 256         conv2d_2[0][0]                   
+batch_normalization_2 (BatchNor (None, 104, 104, 64) 256         conv2d_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_2 (Tensor [(None, 104, 104, 64 0           batch_normalization_2[0][0]      
+tf_op_layer_LeakyRelu_2 (Tensor [(None, 104, 104, 64 0           batch_normalization_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_split (TensorFlowOp [(None, 104, 104, 32 0           tf_op_layer_LeakyRelu_2[0][0]    
+tf_op_layer_split (TensorFlowOp [(None, 104, 104, 32 0           tf_op_layer_LeakyRelu_2[0][0]
 __________________________________________________________________________________________________
-conv2d_3 (Conv2D) 13            (None, 104, 104, 32) 9216        tf_op_layer_split[0][1]          
+conv2d_3 (Conv2D) 13            (None, 104, 104, 32) 9216        tf_op_layer_split[0][1]
 __________________________________________________________________________________________________
-batch_normalization_3 (BatchNor (None, 104, 104, 32) 128         conv2d_3[0][0]                   
+batch_normalization_3 (BatchNor (None, 104, 104, 32) 128         conv2d_3[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_3 (Tensor [(None, 104, 104, 32 0           batch_normalization_3[0][0]      
+tf_op_layer_LeakyRelu_3 (Tensor [(None, 104, 104, 32 0           batch_normalization_3[0][0]
 __________________________________________________________________________________________________
-conv2d_4 (Conv2D) 16            (None, 104, 104, 32) 9216        tf_op_layer_LeakyRelu_3[0][0]    
+conv2d_4 (Conv2D) 16            (None, 104, 104, 32) 9216        tf_op_layer_LeakyRelu_3[0][0]
 __________________________________________________________________________________________________
-batch_normalization_4 (BatchNor (None, 104, 104, 32) 128         conv2d_4[0][0]                   
+batch_normalization_4 (BatchNor (None, 104, 104, 32) 128         conv2d_4[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_4 (Tensor [(None, 104, 104, 32 0           batch_normalization_4[0][0]      
+tf_op_layer_LeakyRelu_4 (Tensor [(None, 104, 104, 32 0           batch_normalization_4[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat (TensorFlowO [(None, 104, 104, 64 0           tf_op_layer_LeakyRelu_4[0][0]    
-                                                                 tf_op_layer_LeakyRelu_3[0][0]    
+tf_op_layer_concat (TensorFlowO [(None, 104, 104, 64 0           tf_op_layer_LeakyRelu_4[0][0]
+                                                                 tf_op_layer_LeakyRelu_3[0][0]
 __________________________________________________________________________________________________
-conv2d_5 (Conv2D)  20           (None, 104, 104, 64) 4096        tf_op_layer_concat[0][0]         
+conv2d_5 (Conv2D)  20           (None, 104, 104, 64) 4096        tf_op_layer_concat[0][0]
 __________________________________________________________________________________________________
-batch_normalization_5 (BatchNor (None, 104, 104, 64) 256         conv2d_5[0][0]                   
+batch_normalization_5 (BatchNor (None, 104, 104, 64) 256         conv2d_5[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_5 (Tensor [(None, 104, 104, 64 0           batch_normalization_5[0][0]      
+tf_op_layer_LeakyRelu_5 (Tensor [(None, 104, 104, 64 0           batch_normalization_5[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_1 (TensorFlo [(None, 104, 104, 12 0           tf_op_layer_LeakyRelu_2[0][0]    
-                                                                 tf_op_layer_LeakyRelu_5[0][0]    
+tf_op_layer_concat_1 (TensorFlo [(None, 104, 104, 12 0           tf_op_layer_LeakyRelu_2[0][0]
+                                                                 tf_op_layer_LeakyRelu_5[0][0]
 __________________________________________________________________________________________________
-max_pooling2d (MaxPooling2D)    (None, 52, 52, 128)  0           tf_op_layer_concat_1[0][0]       
+max_pooling2d (MaxPooling2D)    (None, 52, 52, 128)  0           tf_op_layer_concat_1[0][0]
 __________________________________________________________________________________________________
-conv2d_6 (Conv2D)  25           (None, 52, 52, 128)  147456      max_pooling2d[0][0]              
+conv2d_6 (Conv2D)  25           (None, 52, 52, 128)  147456      max_pooling2d[0][0]
 __________________________________________________________________________________________________
-batch_normalization_6 (BatchNor (None, 52, 52, 128)  512         conv2d_6[0][0]                   
+batch_normalization_6 (BatchNor (None, 52, 52, 128)  512         conv2d_6[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_6 (Tensor [(None, 52, 52, 128) 0           batch_normalization_6[0][0]      
+tf_op_layer_LeakyRelu_6 (Tensor [(None, 52, 52, 128) 0           batch_normalization_6[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_split_1 (TensorFlow [(None, 52, 52, 64), 0           tf_op_layer_LeakyRelu_6[0][0]    
+tf_op_layer_split_1 (TensorFlow [(None, 52, 52, 64), 0           tf_op_layer_LeakyRelu_6[0][0]
 __________________________________________________________________________________________________
-conv2d_7 (Conv2D) 29            (None, 52, 52, 64)   36864       tf_op_layer_split_1[0][1]        
+conv2d_7 (Conv2D) 29            (None, 52, 52, 64)   36864       tf_op_layer_split_1[0][1]
 __________________________________________________________________________________________________
-batch_normalization_7 (BatchNor (None, 52, 52, 64)   256         conv2d_7[0][0]                   
+batch_normalization_7 (BatchNor (None, 52, 52, 64)   256         conv2d_7[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_7 (Tensor [(None, 52, 52, 64)] 0           batch_normalization_7[0][0]      
+tf_op_layer_LeakyRelu_7 (Tensor [(None, 52, 52, 64)] 0           batch_normalization_7[0][0]
 __________________________________________________________________________________________________
-conv2d_8 (Conv2D) 32            (None, 52, 52, 64)   36864       tf_op_layer_LeakyRelu_7[0][0]    
+conv2d_8 (Conv2D) 32            (None, 52, 52, 64)   36864       tf_op_layer_LeakyRelu_7[0][0]
 __________________________________________________________________________________________________
-batch_normalization_8 (BatchNor (None, 52, 52, 64)   256         conv2d_8[0][0]                   
+batch_normalization_8 (BatchNor (None, 52, 52, 64)   256         conv2d_8[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_8 (Tensor [(None, 52, 52, 64)] 0           batch_normalization_8[0][0]      
+tf_op_layer_LeakyRelu_8 (Tensor [(None, 52, 52, 64)] 0           batch_normalization_8[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_2 (TensorFlo [(None, 52, 52, 128) 0           tf_op_layer_LeakyRelu_8[0][0]    
-                                                                 tf_op_layer_LeakyRelu_7[0][0]    
+tf_op_layer_concat_2 (TensorFlo [(None, 52, 52, 128) 0           tf_op_layer_LeakyRelu_8[0][0]
+                                                                 tf_op_layer_LeakyRelu_7[0][0]
 __________________________________________________________________________________________________
-conv2d_9 (Conv2D)  36           (None, 52, 52, 128)  16384       tf_op_layer_concat_2[0][0]       
+conv2d_9 (Conv2D)  36           (None, 52, 52, 128)  16384       tf_op_layer_concat_2[0][0]
 __________________________________________________________________________________________________
-batch_normalization_9 (BatchNor (None, 52, 52, 128)  512         conv2d_9[0][0]                   
+batch_normalization_9 (BatchNor (None, 52, 52, 128)  512         conv2d_9[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_9 (Tensor [(None, 52, 52, 128) 0           batch_normalization_9[0][0]      
+tf_op_layer_LeakyRelu_9 (Tensor [(None, 52, 52, 128) 0           batch_normalization_9[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_3 (TensorFlo [(None, 52, 52, 256) 0           tf_op_layer_LeakyRelu_6[0][0]    
-                                                                 tf_op_layer_LeakyRelu_9[0][0]    
+tf_op_layer_concat_3 (TensorFlo [(None, 52, 52, 256) 0           tf_op_layer_LeakyRelu_6[0][0]
+                                                                 tf_op_layer_LeakyRelu_9[0][0]
 __________________________________________________________________________________________________
-max_pooling2d_1 (MaxPooling2D)  (None, 26, 26, 256)  0           tf_op_layer_concat_3[0][0]       
+max_pooling2d_1 (MaxPooling2D)  (None, 26, 26, 256)  0           tf_op_layer_concat_3[0][0]
 __________________________________________________________________________________________________
-conv2d_10 (Conv2D) 41           (None, 26, 26, 256)  589824      max_pooling2d_1[0][0]            
+conv2d_10 (Conv2D) 41           (None, 26, 26, 256)  589824      max_pooling2d_1[0][0]
 __________________________________________________________________________________________________
-batch_normalization_10 (BatchNo (None, 26, 26, 256)  1024        conv2d_10[0][0]                  
+batch_normalization_10 (BatchNo (None, 26, 26, 256)  1024        conv2d_10[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_10 (Tenso [(None, 26, 26, 256) 0           batch_normalization_10[0][0]     
+tf_op_layer_LeakyRelu_10 (Tenso [(None, 26, 26, 256) 0           batch_normalization_10[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_split_2 (TensorFlow [(None, 26, 26, 128) 0           tf_op_layer_LeakyRelu_10[0][0]   
+tf_op_layer_split_2 (TensorFlow [(None, 26, 26, 128) 0           tf_op_layer_LeakyRelu_10[0][0]
 __________________________________________________________________________________________________
-conv2d_11 (Conv2D) 45           (None, 26, 26, 128)  147456      tf_op_layer_split_2[0][1]        
+conv2d_11 (Conv2D) 45           (None, 26, 26, 128)  147456      tf_op_layer_split_2[0][1]
 __________________________________________________________________________________________________
-batch_normalization_11 (BatchNo (None, 26, 26, 128)  512         conv2d_11[0][0]                  
+batch_normalization_11 (BatchNo (None, 26, 26, 128)  512         conv2d_11[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_11 (Tenso [(None, 26, 26, 128) 0           batch_normalization_11[0][0]     
+tf_op_layer_LeakyRelu_11 (Tenso [(None, 26, 26, 128) 0           batch_normalization_11[0][0]
 __________________________________________________________________________________________________
-conv2d_12 (Conv2D) 48           (None, 26, 26, 128)  147456      tf_op_layer_LeakyRelu_11[0][0]   
+conv2d_12 (Conv2D) 48           (None, 26, 26, 128)  147456      tf_op_layer_LeakyRelu_11[0][0]
 __________________________________________________________________________________________________
-batch_normalization_12 (BatchNo (None, 26, 26, 128)  512         conv2d_12[0][0]                  
+batch_normalization_12 (BatchNo (None, 26, 26, 128)  512         conv2d_12[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_12 (Tenso [(None, 26, 26, 128) 0           batch_normalization_12[0][0]     
+tf_op_layer_LeakyRelu_12 (Tenso [(None, 26, 26, 128) 0           batch_normalization_12[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_4 (TensorFlo [(None, 26, 26, 256) 0           tf_op_layer_LeakyRelu_12[0][0]   
-                                                                 tf_op_layer_LeakyRelu_11[0][0]   
+tf_op_layer_concat_4 (TensorFlo [(None, 26, 26, 256) 0           tf_op_layer_LeakyRelu_12[0][0]
+                                                                 tf_op_layer_LeakyRelu_11[0][0]
 __________________________________________________________________________________________________
-conv2d_13 (Conv2D) 52           (None, 26, 26, 256)  65536       tf_op_layer_concat_4[0][0]       
+conv2d_13 (Conv2D) 52           (None, 26, 26, 256)  65536       tf_op_layer_concat_4[0][0]
 __________________________________________________________________________________________________
-batch_normalization_13 (BatchNo (None, 26, 26, 256)  1024        conv2d_13[0][0]                  
+batch_normalization_13 (BatchNo (None, 26, 26, 256)  1024        conv2d_13[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_13 (Tenso [(None, 26, 26, 256) 0           batch_normalization_13[0][0]     
+tf_op_layer_LeakyRelu_13 (Tenso [(None, 26, 26, 256) 0           batch_normalization_13[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_5 (TensorFlo [(None, 26, 26, 512) 0           tf_op_layer_LeakyRelu_10[0][0]   
-                                                                 tf_op_layer_LeakyRelu_13[0][0]   
+tf_op_layer_concat_5 (TensorFlo [(None, 26, 26, 512) 0           tf_op_layer_LeakyRelu_10[0][0]
+                                                                 tf_op_layer_LeakyRelu_13[0][0]
 __________________________________________________________________________________________________
-max_pooling2d_2 (MaxPooling2D)  (None, 13, 13, 512)  0           tf_op_layer_concat_5[0][0]       
+max_pooling2d_2 (MaxPooling2D)  (None, 13, 13, 512)  0           tf_op_layer_concat_5[0][0]
 __________________________________________________________________________________________________
-conv2d_14 (Conv2D)  57          (None, 13, 13, 512)  2359296     max_pooling2d_2[0][0]            
+conv2d_14 (Conv2D)  57          (None, 13, 13, 512)  2359296     max_pooling2d_2[0][0]
 __________________________________________________________________________________________________
-batch_normalization_14 (BatchNo (None, 13, 13, 512)  2048        conv2d_14[0][0]                  
+batch_normalization_14 (BatchNo (None, 13, 13, 512)  2048        conv2d_14[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_14 (Tenso [(None, 13, 13, 512) 0           batch_normalization_14[0][0]     
+tf_op_layer_LeakyRelu_14 (Tenso [(None, 13, 13, 512) 0           batch_normalization_14[0][0]
 __________________________________________________________________________________________________
-conv2d_15 (Conv2D)  60          (None, 13, 13, 256)  131072      tf_op_layer_LeakyRelu_14[0][0]   
+conv2d_15 (Conv2D)  60          (None, 13, 13, 256)  131072      tf_op_layer_LeakyRelu_14[0][0]
 __________________________________________________________________________________________________
-batch_normalization_15 (BatchNo (None, 13, 13, 256)  1024        conv2d_15[0][0]                  
+batch_normalization_15 (BatchNo (None, 13, 13, 256)  1024        conv2d_15[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_15 (Tenso [(None, 13, 13, 256) 0           batch_normalization_15[0][0]     
+tf_op_layer_LeakyRelu_15 (Tenso [(None, 13, 13, 256) 0           batch_normalization_15[0][0]
 __________________________________________________________________________________________________
-conv2d_18 (Conv2D)  63          (None, 13, 13, 128)  32768       tf_op_layer_LeakyRelu_15[0][0]   
+conv2d_18 (Conv2D)  63          (None, 13, 13, 128)  32768       tf_op_layer_LeakyRelu_15[0][0]
 __________________________________________________________________________________________________
-batch_normalization_17 (BatchNo (None, 13, 13, 128)  512         conv2d_18[0][0]                  
+batch_normalization_17 (BatchNo (None, 13, 13, 128)  512         conv2d_18[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_17 (Tenso [(None, 13, 13, 128) 0           batch_normalization_17[0][0]     
+tf_op_layer_LeakyRelu_17 (Tenso [(None, 13, 13, 128) 0           batch_normalization_17[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_ResizeBilinear (Ten [(None, 26, 26, 128) 0           tf_op_layer_LeakyRelu_17[0][0]   
+tf_op_layer_ResizeBilinear (Ten [(None, 26, 26, 128) 0           tf_op_layer_LeakyRelu_17[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_6 (TensorFlo [(None, 26, 26, 384) 0           tf_op_layer_ResizeBilinear[0][0] 
-                                                                 tf_op_layer_LeakyRelu_13[0][0]   
+tf_op_layer_concat_6 (TensorFlo [(None, 26, 26, 384) 0           tf_op_layer_ResizeBilinear[0][0]
+                                                                 tf_op_layer_LeakyRelu_13[0][0]
 __________________________________________________________________________________________________
-conv2d_19 (Conv2D) 68           (None, 26, 26, 256)  884736      tf_op_layer_concat_6[0][0]       
+conv2d_19 (Conv2D) 68           (None, 26, 26, 256)  884736      tf_op_layer_concat_6[0][0]
 __________________________________________________________________________________________________
-conv2d_16 (Conv2D) 69           (None, 13, 13, 512)  1179648     tf_op_layer_LeakyRelu_15[0][0]   
+conv2d_16 (Conv2D) 69           (None, 13, 13, 512)  1179648     tf_op_layer_LeakyRelu_15[0][0]
 __________________________________________________________________________________________________
-batch_normalization_18 (BatchNo (None, 26, 26, 256)  1024        conv2d_19[0][0]                  
+batch_normalization_18 (BatchNo (None, 26, 26, 256)  1024        conv2d_19[0][0]
 __________________________________________________________________________________________________
-batch_normalization_16 (BatchNo (None, 13, 13, 512)  2048        conv2d_16[0][0]                  
+batch_normalization_16 (BatchNo (None, 13, 13, 512)  2048        conv2d_16[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_18 (Tenso [(None, 26, 26, 256) 0           batch_normalization_18[0][0]     
+tf_op_layer_LeakyRelu_18 (Tenso [(None, 26, 26, 256) 0           batch_normalization_18[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_LeakyRelu_16 (Tenso [(None, 13, 13, 512) 0           batch_normalization_16[0][0]     
+tf_op_layer_LeakyRelu_16 (Tenso [(None, 13, 13, 512) 0           batch_normalization_16[0][0]
 __________________________________________________________________________________________________
-conv2d_20 (Conv2D) 74           (None, 26, 26, 255)  65535       tf_op_layer_LeakyRelu_18[0][0]   
+conv2d_20 (Conv2D) 74           (None, 26, 26, 255)  65535       tf_op_layer_LeakyRelu_18[0][0]
 __________________________________________________________________________________________________
-conv2d_17 (Conv2D) 75           (None, 13, 13, 255)  130815      tf_op_layer_LeakyRelu_16[0][0]   
+conv2d_17 (Conv2D) 75           (None, 13, 13, 255)  130815      tf_op_layer_LeakyRelu_16[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Shape (TensorFlowOp [(4,)]               0           conv2d_20[0][0]                  
+tf_op_layer_Shape (TensorFlowOp [(4,)]               0           conv2d_20[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Shape_2 (TensorFlow [(4,)]               0           conv2d_17[0][0]                  
+tf_op_layer_Shape_2 (TensorFlow [(4,)]               0           conv2d_17[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_strided_slice (Tens [()]                 0           tf_op_layer_Shape[0][0]          
+tf_op_layer_strided_slice (Tens [()]                 0           tf_op_layer_Shape[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_strided_slice_2 (Te [()]                 0           tf_op_layer_Shape_2[0][0]        
+tf_op_layer_strided_slice_2 (Te [()]                 0           tf_op_layer_Shape_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Reshape/shape (Tens [(5,)]               0    80     tf_op_layer_strided_slice[0][0]  
+tf_op_layer_Reshape/shape (Tens [(5,)]               0    80     tf_op_layer_strided_slice[0][0]
 __________________________________________________________________________________________________
 tf_op_layer_Reshape_1/shape (Te [(5,)]               0           tf_op_layer_strided_slice_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Reshape (TensorFlow [(None, 26, 26, 3, 8 0           conv2d_20[0][0]                  
-                                                                 tf_op_layer_Reshape/shape[0][0]  
+tf_op_layer_Reshape (TensorFlow [(None, 26, 26, 3, 8 0           conv2d_20[0][0]
+                                                                 tf_op_layer_Reshape/shape[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Reshape_1 (TensorFl [(None, 13, 13, 3, 8 0           conv2d_17[0][0]                  
+tf_op_layer_Reshape_1 (TensorFl [(None, 13, 13, 3, 8 0           conv2d_17[0][0]
                                                                  tf_op_layer_Reshape_1/shape[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Shape_1 (TensorFlow [(5,)]               0           tf_op_layer_Reshape[0][0]        
+tf_op_layer_Shape_1 (TensorFlow [(5,)]               0           tf_op_layer_Reshape[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Shape_3 (TensorFlow [(5,)]               0    85     tf_op_layer_Reshape_1[0][0]      
+tf_op_layer_Shape_3 (TensorFlow [(5,)]               0    85     tf_op_layer_Reshape_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_split_3 (TensorFlow [(None, 26, 26, 3, 2 0           tf_op_layer_Reshape[0][0]        
+tf_op_layer_split_3 (TensorFlow [(None, 26, 26, 3, 2 0           tf_op_layer_Reshape[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_strided_slice_1 (Te [()]                 0           tf_op_layer_Shape_1[0][0]        
+tf_op_layer_strided_slice_1 (Te [()]                 0           tf_op_layer_Shape_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_split_4 (TensorFlow [(None, 13, 13, 3, 2 0           tf_op_layer_Reshape_1[0][0]      
+tf_op_layer_split_4 (TensorFlow [(None, 13, 13, 3, 2 0           tf_op_layer_Reshape_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_strided_slice_3 (Te [()]                 0           tf_op_layer_Shape_3[0][0]        
+tf_op_layer_strided_slice_3 (Te [()]                 0           tf_op_layer_Shape_3[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid (TensorFlow [(None, 26, 26, 3, 2 0    90     tf_op_layer_split_3[0][0]        
+tf_op_layer_Sigmoid (TensorFlow [(None, 26, 26, 3, 2 0    90     tf_op_layer_split_3[0][0]
 __________________________________________________________________________________________________
 tf_op_layer_Tile/multiples (Ten [(5,)]               0           tf_op_layer_strided_slice_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid_3 (TensorFl [(None, 13, 13, 3, 2 0           tf_op_layer_split_4[0][0]        
+tf_op_layer_Sigmoid_3 (TensorFl [(None, 13, 13, 3, 2 0           tf_op_layer_split_4[0][0]
 __________________________________________________________________________________________________
 tf_op_layer_Tile_1/multiples (T [(5,)]               0           tf_op_layer_strided_slice_3[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Mul (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_Sigmoid[0][0]        
+tf_op_layer_Mul (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_Sigmoid[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Tile (TensorFlowOpL [(None, 26, 26, 3, 2 0    95     tf_op_layer_Tile/multiples[0][0] 
+tf_op_layer_Tile (TensorFlowOpL [(None, 26, 26, 3, 2 0    95     tf_op_layer_Tile/multiples[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Mul_3 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_Sigmoid_3[0][0]      
+tf_op_layer_Mul_3 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_Sigmoid_3[0][0]
 __________________________________________________________________________________________________
 tf_op_layer_Tile_1 (TensorFlowO [(None, 13, 13, 3, 2 0           tf_op_layer_Tile_1/multiples[0][0
 __________________________________________________________________________________________________
-tf_op_layer_Sub (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_Mul[0][0]            
+tf_op_layer_Sub (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_Mul[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Cast (TensorFlowOpL [(None, 26, 26, 3, 2 0           tf_op_layer_Tile[0][0]           
+tf_op_layer_Cast (TensorFlowOpL [(None, 26, 26, 3, 2 0           tf_op_layer_Tile[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Sub_1 (TensorFlowOp [(None, 13, 13, 3, 2 0   100     tf_op_layer_Mul_3[0][0]          
+tf_op_layer_Sub_1 (TensorFlowOp [(None, 13, 13, 3, 2 0   100     tf_op_layer_Mul_3[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Cast_1 (TensorFlowO [(None, 13, 13, 3, 2 0           tf_op_layer_Tile_1[0][0]         
+tf_op_layer_Cast_1 (TensorFlowO [(None, 13, 13, 3, 2 0           tf_op_layer_Tile_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_AddV2 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_Sub[0][0]            
-                                                                 tf_op_layer_Cast[0][0]           
+tf_op_layer_AddV2 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_Sub[0][0]
+                                                                 tf_op_layer_Cast[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Exp (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_split_3[0][1]        
+tf_op_layer_Exp (TensorFlowOpLa [(None, 26, 26, 3, 2 0           tf_op_layer_split_3[0][1]
 __________________________________________________________________________________________________
-tf_op_layer_AddV2_1 (TensorFlow [(None, 13, 13, 3, 2 0           tf_op_layer_Sub_1[0][0]          
-                                                                 tf_op_layer_Cast_1[0][0]         
+tf_op_layer_AddV2_1 (TensorFlow [(None, 13, 13, 3, 2 0           tf_op_layer_Sub_1[0][0]
+                                                                 tf_op_layer_Cast_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Exp_1 (TensorFlowOp [(None, 13, 13, 3, 2 0   105     tf_op_layer_split_4[0][1]        
+tf_op_layer_Exp_1 (TensorFlowOp [(None, 13, 13, 3, 2 0   105     tf_op_layer_split_4[0][1]
 __________________________________________________________________________________________________
-tf_op_layer_Mul_1 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_AddV2[0][0]          
+tf_op_layer_Mul_1 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_AddV2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Mul_2 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_Exp[0][0]            
+tf_op_layer_Mul_2 (TensorFlowOp [(None, 26, 26, 3, 2 0           tf_op_layer_Exp[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Mul_4 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_AddV2_1[0][0]        
+tf_op_layer_Mul_4 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_AddV2_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Mul_5 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_Exp_1[0][0]          
+tf_op_layer_Mul_5 (TensorFlowOp [(None, 13, 13, 3, 2 0           tf_op_layer_Exp_1[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_7 (TensorFlo [(None, 26, 26, 3, 4 0   110     tf_op_layer_Mul_1[0][0]          
-                                                                 tf_op_layer_Mul_2[0][0]          
+tf_op_layer_concat_7 (TensorFlo [(None, 26, 26, 3, 4 0   110     tf_op_layer_Mul_1[0][0]
+                                                                 tf_op_layer_Mul_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid_1 (TensorFl [(None, 26, 26, 3, 1 0           tf_op_layer_split_3[0][2]        
+tf_op_layer_Sigmoid_1 (TensorFl [(None, 26, 26, 3, 1 0           tf_op_layer_split_3[0][2]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid_2 (TensorFl [(None, 26, 26, 3, 8 0           tf_op_layer_split_3[0][3]        
+tf_op_layer_Sigmoid_2 (TensorFl [(None, 26, 26, 3, 8 0           tf_op_layer_split_3[0][3]
 __________________________________________________________________________________________________
-tf_op_layer_concat_9 (TensorFlo [(None, 13, 13, 3, 4 0           tf_op_layer_Mul_4[0][0]          
-                                                                 tf_op_layer_Mul_5[0][0]          
+tf_op_layer_concat_9 (TensorFlo [(None, 13, 13, 3, 4 0           tf_op_layer_Mul_4[0][0]
+                                                                 tf_op_layer_Mul_5[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid_4 (TensorFl [(None, 13, 13, 3, 1 0           tf_op_layer_split_4[0][2]        
+tf_op_layer_Sigmoid_4 (TensorFl [(None, 13, 13, 3, 1 0           tf_op_layer_split_4[0][2]
 __________________________________________________________________________________________________
-tf_op_layer_Sigmoid_5 (TensorFl [(None, 13, 13, 3, 8 0   115     tf_op_layer_split_4[0][3]        
+tf_op_layer_Sigmoid_5 (TensorFl [(None, 13, 13, 3, 8 0   115     tf_op_layer_split_4[0][3]
 __________________________________________________________________________________________________
-tf_op_layer_concat_8 (TensorFlo [(None, 26, 26, 3, 8 0           tf_op_layer_concat_7[0][0]       
-                                                                 tf_op_layer_Sigmoid_1[0][0]      
-                                                                 tf_op_layer_Sigmoid_2[0][0]      
+tf_op_layer_concat_8 (TensorFlo [(None, 26, 26, 3, 8 0           tf_op_layer_concat_7[0][0]
+                                                                 tf_op_layer_Sigmoid_1[0][0]
+                                                                 tf_op_layer_Sigmoid_2[0][0]
 __________________________________________________________________________________________________
-tf_op_layer_concat_10 (TensorFl [(None, 13, 13, 3, 8 0           tf_op_layer_concat_9[0][0]       
-                                                                 tf_op_layer_Sigmoid_4[0][0]      
-                                                                 tf_op_layer_Sigmoid_5[0][0]      
+tf_op_layer_concat_10 (TensorFl [(None, 13, 13, 3, 8 0           tf_op_layer_concat_9[0][0]
+                                                                 tf_op_layer_Sigmoid_4[0][0]
+                                                                 tf_op_layer_Sigmoid_5[0][0]
 ==================================================================================================
 Total params: 6,062,814
 Trainable params: 6,056,606
@@ -407,25 +407,25 @@ private:
     };
 
     // weights
-    float ****w0, ****w1, ****w2, ****w3, ****w4, ****w5, ****w6, ****w7, ****w8, ****w9,
-        ****w10, ****w11, ****w12, ****w13, ****w14, ****w15, ****w16, ****w17, ****w18,
-        ****w19, ****w20;
+    float**** w0, **** w1, **** w2, **** w3, **** w4, **** w5, **** w6, **** w7, **** w8, **** w9,
+        **** w10, **** w11, **** w12, **** w13, **** w14, **** w15, **** w16, **** w17, **** w18,
+        **** w19, **** w20;
     // batch norm
-    float **w0n, **w1n, **w2n, **w3n, **w4n, **w5n, **w6n, **w7n, **w8n, **w9n, **w10n, **w11n,
-        **w12n, **w13n, **w14n, **w15n, **w16n, **w19n, **w18n;
+    float** w0n, ** w1n, ** w2n, ** w3n, ** w4n, ** w5n, ** w6n, ** w7n, ** w8n, ** w9n, ** w10n, ** w11n,
+        ** w12n, ** w13n, ** w14n, ** w15n, ** w16n, ** w19n, ** w18n;
     // bias
-    float *w20b, *w17b;
+    float* w20b, * w17b;
 
     // layers
-    float ***image;
-    float ***l0, ***l1, ***l2, ***l3, ***l4, ***l5, ***l6, ***l7, ***l8, ***l9, ***l10, ***l11,
-        ***l12, ***l13, ***l14, ***l15, ***l16, ***l17, ***l18, ***l19, ***l20;
+    float*** image;
+    float*** l0, *** l1, *** l2, *** l3, *** l4, *** l5, *** l6, *** l7, *** l8, *** l9, *** l10, *** l11,
+        *** l12, *** l13, *** l14, *** l15, *** l16, *** l17, *** l18, *** l19, *** l20;
     // concat layers
-    float ***l5c52, ***l9c96, ***l13c1310, ***l18bu;
+    float*** l5c52, *** l9c96, *** l13c1310, *** l18bu;
 
-    float**** getWeights(ifstream *fin, int mi, int mj, int mk, int ml)
+    float**** getWeights(ifstream* fin, int mi, int mj, int mk, int ml)
     {
-        float**** buff = (float****) createArray(mi, mj, mk, ml, sizeof(float));
+        float**** buff = (float****)createArray(mi, mj, mk, ml, sizeof(float));
         for (int i = 0; i < mi; i++) {
             for (int j = 0; j < mj; j++) {
                 for (int k = 0; k < mk; k++) {
@@ -436,18 +436,18 @@ private:
         return buff;
     }
 
-    float** getNorm(ifstream *fin, int mj)
+    float** getNorm(ifstream* fin, int mj)
     {
-        float** buff = (float**) createArray(4, mj, sizeof(float));
+        float** buff = (float**)createArray(4, mj, sizeof(float));
         for (int i = 0; i < 4; i++) {
             fin->read(reinterpret_cast<char*>(buff[i]), sizeof(float) * mj);
         }
         return buff;
     }
 
-    float* getBias(ifstream *fin, int mi)
+    float* getBias(ifstream* fin, int mi)
     {
-        float* buff = (float*) malloc(mi * sizeof(float));
+        float* buff = (float*)malloc(mi * sizeof(float));
         fin->read(reinterpret_cast<char*>(buff), sizeof(float) * mi);
         return buff;
     }
@@ -455,7 +455,7 @@ private:
     inline float batchNorm(float x, float gamma, float beta, float mean, float var)
     {
         //z1_hat = (x - pop_mean) / sqrt(pop_var + epsilon)
-        //	BN1 = gamma * z1_hat + beta
+        //  BN1 = gamma * z1_hat + beta
         return ((x - mean) / sqrtf(var + eps)) * gamma + beta;
     }
 
@@ -622,27 +622,29 @@ public:
         w17 = getWeights(&fin, 1, 1, 512, 255);
         w17b = getBias(&fin, 255);
 
-        l0 = (float***) createArray(208, 208, 32, sizeof(float));
-        l1 = (float***) createArray(104, 104, 64, sizeof(float));
-        l2 = (float***) createArray(104, 104, 64, sizeof(float));
-        l3 = (float***) createArray(104, 104, 32, sizeof(float));
-        l4 = (float***) createArray(104, 104, 32, sizeof(float));
-        l5 = (float***) createArray(104, 104, 64, sizeof(float));
-        l6 = (float***) createArray(52, 52, 128, sizeof(float));
-        l7 = (float***) createArray(52, 52, 64, sizeof(float));
-        l8 = (float***) createArray(52, 52, 64, sizeof(float));
-        l9 = (float***) createArray(52, 52, 128, sizeof(float));
-        l10 = (float***) createArray(26, 26, 256, sizeof(float));
-        l11 = (float***) createArray(26, 26, 128, sizeof(float));
-        l12 = (float***) createArray(26, 26, 128, sizeof(float));
-        l13 = (float***) createArray(26, 26, 256, sizeof(float));
-        l14 = (float***) createArray(13, 13, 512, sizeof(float));
-        l15 = (float***) createArray(13, 13, 256, sizeof(float));
-        l18 = (float***) createArray(13, 13, 128, sizeof(float));
-        l19 = (float***) createArray(26, 26, 256, sizeof(float));
-        l16 = (float***) createArray(13, 13, 512, sizeof(float));
-        l20 = (float***) createArray(26, 26, 255, sizeof(float));
-        l17 = (float***) createArray(13, 13, 255, sizeof(float));
+        fin.close();
+
+        l0 = (float***)createArray(208, 208, 32, sizeof(float));
+        l1 = (float***)createArray(104, 104, 64, sizeof(float));
+        l2 = (float***)createArray(104, 104, 64, sizeof(float));
+        l3 = (float***)createArray(104, 104, 32, sizeof(float));
+        l4 = (float***)createArray(104, 104, 32, sizeof(float));
+        l5 = (float***)createArray(104, 104, 64, sizeof(float));
+        l6 = (float***)createArray(52, 52, 128, sizeof(float));
+        l7 = (float***)createArray(52, 52, 64, sizeof(float));
+        l8 = (float***)createArray(52, 52, 64, sizeof(float));
+        l9 = (float***)createArray(52, 52, 128, sizeof(float));
+        l10 = (float***)createArray(26, 26, 256, sizeof(float));
+        l11 = (float***)createArray(26, 26, 128, sizeof(float));
+        l12 = (float***)createArray(26, 26, 128, sizeof(float));
+        l13 = (float***)createArray(26, 26, 256, sizeof(float));
+        l14 = (float***)createArray(13, 13, 512, sizeof(float));
+        l15 = (float***)createArray(13, 13, 256, sizeof(float));
+        l18 = (float***)createArray(13, 13, 128, sizeof(float));
+        l19 = (float***)createArray(26, 26, 256, sizeof(float));
+        l16 = (float***)createArray(13, 13, 512, sizeof(float));
+        l20 = (float***)createArray(26, 26, 255, sizeof(float));
+        l17 = (float***)createArray(13, 13, 255, sizeof(float));
 
         l5c52 = (float***)createArray(52, 52, 128, sizeof(float));
         l9c96 = (float***)createArray(26, 26, 256, sizeof(float));
@@ -712,7 +714,7 @@ public:
         freeArray(3, 3, 256, 512, (void****)w16);
         freeArray(1, 1, 256, 255, (void****)w20);
         freeArray(1, 1, 512, 255, (void****)w17);
-        
+
         freeArray(4, 32, (void**)w0n);
         freeArray(4, 64, (void**)w1n);
         freeArray(4, 64, (void**)w2n);
@@ -882,7 +884,7 @@ public:
             }
         }
     }
-    
+
     void kernelFuncPaddedEvenL5(float*** cl, float** cn, float**** cw,
         float*** pl, float*** pl2, uint im, uint jm, uint k, uint lm)
     {
@@ -912,7 +914,7 @@ public:
                 uint i0 = i * 2, i1 = i0 + 1;
                 uint j0 = j * 2, j1 = j0 + 1;
 
-                float ***px = k < 64 ? pl2 : pl;
+                float*** px = k < 64 ? pl2 : pl;
                 uint kn = k % 64;
                 cl[i][j][k] = fmaxf(fmaxf(fmaxf(px[i0][j0][kn], px[i0][j1][kn]),
                     px[i1][j0][kn]), px[i1][j1][kn]);
@@ -1036,7 +1038,7 @@ public:
                 uint i0 = i * 2, i1 = i0 + 1;
                 uint j0 = j * 2, j1 = j0 + 1;
 
-                float ***px = k < 128 ? pl2 : pl;
+                float*** px = k < 128 ? pl2 : pl;
                 uint kn = k % 128;
                 cl[i][j][k] = fmaxf(fmaxf(fmaxf(px[i0][j0][kn], px[i0][j1][kn]),
                     px[i1][j0][kn]), px[i1][j1][kn]);
@@ -1160,7 +1162,7 @@ public:
                 uint i0 = i * 2, i1 = i0 + 1;
                 uint j0 = j * 2, j1 = j0 + 1;
 
-                float ***px = k < 256 ? pl2 : pl;
+                float*** px = k < 256 ? pl2 : pl;
                 uint kn = k % 256;
                 cl[i][j][k] = fmaxf(fmaxf(fmaxf(px[i0][j0][kn], px[i0][j1][kn]),
                     px[i1][j0][kn]), px[i1][j1][kn]);
@@ -1403,7 +1405,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedUnevenL0, this, l0, w0n, w0, image, 208, 208, k, 3);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L1, kernel=3x3, stride=2, padding=valid
@@ -1411,7 +1413,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedUnevenL1, this, l1, w1n, w1, l0, 104, 104, k, 32);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L2, kernel=3x3, stride=1, padding=same
@@ -1420,7 +1422,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL2, this, l2, w2n, w2, l1, 104, 104, k, 64);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L3, kernel=3x3, stride=1, padding=same
@@ -1429,7 +1431,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL3, this, l3, w3n, w3, l2, 104, 104, k, 32, 32);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L4, kernel=3x3, stride=1, padding=same
@@ -1437,7 +1439,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL4, this, l4, w4n, w4, l3, 104, 104, k, 32);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L5, kernel=1x1, stride=1, padding=none
@@ -1446,7 +1448,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL5, this, l5, w5n, w5, l4, l3, 104, 104, k, 64);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L5, concat, maxpool=2x2, stride=1
@@ -1454,7 +1456,7 @@ public:
             thread t(&yolov4tiny::concatMaxpoolL5, this, l5c52, l5, l2, 52, 52, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L6, kernel=3x3, stride=1, padding=same
@@ -1463,7 +1465,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL6, this, l6, w6n, w6, l5c52, 52, 52, k, 128);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L7, kernel=3x3, stride=1, padding=same
@@ -1472,7 +1474,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL7, this, l7, w7n, w7, l6, 52, 52, k, 64, 64);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L8, kernel=3x3, stride=1, padding=same
@@ -1480,7 +1482,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL8, this, l8, w8n, w8, l7, 52, 52, k, 64);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L9, kernel=1x1, stride=1, padding=none
@@ -1489,7 +1491,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL9, this, l9, w9n, w9, l8, l7, 52, 52, k, 128);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L9, concat, maxpool=2x2, stride=1
@@ -1497,7 +1499,7 @@ public:
             thread t(&yolov4tiny::concatMaxpoolL9, this, l9c96, l9, l6, 26, 26, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L10, kernel=3x3, stride=1, padding=same
@@ -1506,7 +1508,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL10, this, l10, w10n, w10, l9c96, 26, 26, k, 256);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L11, kernel=3x3, stride=1, padding=same
@@ -1515,7 +1517,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL11, this, l11, w11n, w11, l10, 26, 26, k, 128, 128);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L12, kernel=3x3, stride=1, padding=same
@@ -1523,7 +1525,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL12, this, l12, w12n, w12, l11, 26, 26, k, 128);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L13, kernel=1x1, stride=1, padding=none
@@ -1532,7 +1534,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL13, this, l13, w13n, w13, l12, l11, 26, 26, k, 256);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L13, concat, maxpool=2x2, stride=1
@@ -1540,7 +1542,7 @@ public:
             thread t(&yolov4tiny::concatMaxpoolL13, this, l13c1310, l13, l10, 13, 13, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L14, kernel=3x3, stride=1, padding=same
@@ -1548,7 +1550,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL14, this, l14, w14n, w14, l13c1310, 13, 13, k, 512);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L15, kernel=1x1, stride=1, padding=none
@@ -1556,7 +1558,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL15, this, l15, w15n, w15, l14, 13, 13, k, 512);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L18, kernel=1x1, stride=1, padding=none
@@ -1564,7 +1566,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL18, this, l18, w18n, w18, l15, 13, 13, k, 256);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L18, bilinear upscale
@@ -1572,7 +1574,7 @@ public:
             thread t(&yolov4tiny::bilinearUpscaleL18, this, l18bu, l18, 26, 26, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L19, kernel=3x3, stride=1, padding=same
@@ -1581,7 +1583,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL19, this, l19, w19n, w19, l18bu, l13, 26, 26, k, 384, 128);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L16, kernel=3x3, stride=1, padding=same
@@ -1589,7 +1591,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL16, this, l16, w16n, w16, l15, 13, 13, k, 256);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L20, kernel=1x1, stride=1, padding=none
@@ -1597,7 +1599,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL20, this, l20, w20b, w20, l19, 26, 26, k, 256);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // L17, kernel=1x1, stride=1, padding=none
@@ -1605,7 +1607,7 @@ public:
             thread t(&yolov4tiny::kernelFuncPaddedEvenL17, this, l17, w17b, w17, l16, 13, 13, k, 512);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         // Decoding model output
@@ -1614,14 +1616,14 @@ public:
             thread t(&yolov4tiny::decodeL20, this, l20, 26, 26, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         for (uint k = 0; k < 255; k++) {
             thread t(&yolov4tiny::decodeL17, this, l17, 13, 13, k);
             threads.push_back(move(t));
         }
-        for (auto &th : threads) th.join();
+        for (auto& th : threads) th.join();
         threads.clear();
 
         //cout << l17[12][5][88] << endl;
@@ -1706,7 +1708,7 @@ public:
 };
 
 int main() {
-    
+
     Mat img;
     img = imread("D:\\Storage\\Unity\\yolov4-tiny\\data\\vrc.png");
     Mat org_img = img.clone();
@@ -1729,13 +1731,13 @@ int main() {
     }
 
     //for (int k = 0; k < 3; k++) {
-	   // for (int i = 0; i < 416; i++) {
-		  //  for (int j = 0; j < 416; j++) {
-			 //   if (k == 0) imgArray[i][j][k] = (i / 415.0f) * (j / 415.0f);
-			 //   else if (k == 1) imgArray[i][j][k] = ((415.0f - i) / 415.0f) * (j / 415.0f);
-			 //   else imgArray[i][j][k] = (i / 415.0f) * ((415.0f - j) / 415.0f);
-		  //  }
-	   // }
+    //    for (int i = 0; i < 416; i++) {
+    //        for (int j = 0; j < 416; j++) {
+    //            if (k == 0) imgArray[i][j][k] = (i / 415.0f) * (j / 415.0f);
+    //            else if (k == 1) imgArray[i][j][k] = ((415.0f - i) / 415.0f) * (j / 415.0f);
+    //            else imgArray[i][j][k] = (i / 415.0f) * ((415.0f - j) / 415.0f);
+    //        }
+    //    }
     //}
 
     string PATH = "D:\\Storage\\Unity\\yolov4-tiny\\data\\yolov4-tiny.bytes";
