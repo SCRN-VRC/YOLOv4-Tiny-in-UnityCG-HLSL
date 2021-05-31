@@ -497,76 +497,82 @@ private:
     }
 
 public:
-    // Annoying callocs
-    static void** createArray(int i, int j, size_t size)
+    // Annoying mallocs
+    static float** createArray(int i, int j, size_t size)
     {
-        void** r = (void**)calloc(i, sizeof(void*));
+        float** r = new float* [i * sizeof(float*)];
         for (int x = 0; x < i; x++) {
-            r[x] = (void*)calloc(j, size);
+            r[x] = new float[j * size];
         }
         return r;
     }
 
-    static void*** createArray(int i, int j, int k, size_t size)
+    static float*** createArray(int i, int j, int k, size_t size)
     {
-        void*** r = (void***)calloc(i, sizeof(void*));
+        float*** r = new float** [i * sizeof(float*)];
         for (int x = 0; x < i; x++) {
-            r[x] = (void**)calloc(j, sizeof(void*));
+            r[x] = new float* [j * sizeof(float*)];
             for (int y = 0; y < j; y++) {
-                r[x][y] = (void*)calloc(k, size);
+                r[x][y] = new float[k * size];
             }
         }
         return r;
     }
 
-    static void**** createArray(int i, int j, int k, int l, size_t size)
+    static float**** createArray(int i, int j, int k, int l, size_t size)
     {
-        void**** r = (void****)calloc(i, sizeof(void*));
+        float**** r = new float*** [i * sizeof(float*)];
         for (int x = 0; x < i; x++) {
-            r[x] = (void***)calloc(j, sizeof(void*));
+            r[x] = new float** [j * sizeof(float*)];
             for (int y = 0; y < j; y++) {
-                r[x][y] = (void**)calloc(k, sizeof(void*));
+                r[x][y] = new float* [k * sizeof(float*)];
                 for (int z = 0; z < k; z++) {
-                    r[x][y][z] = (void*)calloc(l, size);
+                    r[x][y][z] = new float[l * size];
                 }
             }
         }
         return r;
     }
 
-    // Annoying calloc frees
-    static void freeArray(int i, int j, void** a)
+    // Annoying malloc frees
+    static void freeArray(int i, float* a)
     {
-        for (int x = 0; x < i; x++) {
-            std::free(a[x]);
-        }
-        std::free(a);
+        delete[] a;
     }
 
-    static void freeArray(int i, int j, int k, void*** a)
+    static void freeArray(int i, int j, float** a)
+    {
+        for (int x = 0; x < i; x++) {
+            delete[] a[x];
+        }
+        delete[] a;
+    }
+
+    static void freeArray(int i, int j, int k, float*** a)
     {
         for (int x = 0; x < i; x++) {
             for (int y = 0; y < j; y++) {
-                std::free(a[x][y]);
+                delete[] a[x][y];
             }
-            std::free(a[x]);
+            delete[] a[x];
         }
-        std::free(a);
+        delete[] a;
     }
 
-    static void freeArray(int i, int j, int k, int l, void**** a)
+    static void freeArray(int i, int j, int k, int l, float**** a)
     {
         for (int x = 0; x < i; x++) {
             for (int y = 0; y < j; y++) {
                 for (int z = 0; z < k; z++) {
-                    std::free(a[x][y][z]);
+                    delete[] a[x][y][z];
                 }
-                std::free(a[x][y]);
+                delete[] a[x][y];
             }
-            std::free(a[x]);
+            delete[] a[x];
         }
-        std::free(a);
+        delete[] a;
     }
+
 
     yolov4tiny(string path, float epsIn, float alphaIn)
     {
@@ -666,77 +672,77 @@ public:
 
     ~yolov4tiny()
     {
-        freeArray(208, 128, 64, (void***)l0);
-        freeArray(104, 104, 64, (void***)l1);
-        freeArray(104, 104, 64, (void***)l2);
-        freeArray(104, 104, 32, (void***)l3);
-        freeArray(104, 104, 32, (void***)l4);
-        freeArray(104, 104, 64, (void***)l5);
-        freeArray(52, 52, 128, (void***)l6);
-        freeArray(52, 52, 64, (void***)l7);
-        freeArray(52, 52, 64, (void***)l8);
-        freeArray(52, 52, 128, (void***)l9);
-        freeArray(26, 26, 256, (void***)l10);
-        freeArray(26, 26, 128, (void***)l11);
-        freeArray(26, 26, 128, (void***)l12);
-        freeArray(26, 26, 256, (void***)l13);
-        freeArray(13, 13, 512, (void***)l14);
-        freeArray(13, 13, 256, (void***)l15);
-        freeArray(13, 13, 512, (void***)l16);
-        freeArray(13, 13, 255, (void***)l17);
-        freeArray(13, 13, 128, (void***)l18);
-        freeArray(26, 26, 256, (void***)l19);
-        freeArray(26, 26, 255, (void***)l20);
+        freeArray(208, 128, 64, l0);
+        freeArray(104, 104, 64, l1);
+        freeArray(104, 104, 64, l2);
+        freeArray(104, 104, 32, l3);
+        freeArray(104, 104, 32, l4);
+        freeArray(104, 104, 64, l5);
+        freeArray(52, 52, 128, l6);
+        freeArray(52, 52, 64, l7);
+        freeArray(52, 52, 64, l8);
+        freeArray(52, 52, 128, l9);
+        freeArray(26, 26, 256, l10);
+        freeArray(26, 26, 128, l11);
+        freeArray(26, 26, 128, l12);
+        freeArray(26, 26, 256, l13);
+        freeArray(13, 13, 512, l14);
+        freeArray(13, 13, 256, l15);
+        freeArray(13, 13, 512, l16);
+        freeArray(13, 13, 255, l17);
+        freeArray(13, 13, 128, l18);
+        freeArray(26, 26, 256, l19);
+        freeArray(26, 26, 255, l20);
 
-        freeArray(52, 52, 128, (void***)l5c52);
-        freeArray(26, 26, 256, (void***)l9c96);
-        freeArray(13, 13, 512, (void***)l13c1310);
-        freeArray(26, 26, 128, (void***)l18bu);
+        freeArray(52, 52, 128, l5c52);
+        freeArray(26, 26, 256, l9c96);
+        freeArray(13, 13, 512, l13c1310);
+        freeArray(26, 26, 128, l18bu);
 
-        freeArray(3, 3, 3, 32, (void****)w0);
-        freeArray(3, 3, 32, 64, (void****)w1);
-        freeArray(3, 3, 64, 64, (void****)w2);
-        freeArray(3, 3, 32, 32, (void****)w3);
-        freeArray(3, 3, 32, 32, (void****)w4);
-        freeArray(1, 1, 64, 64, (void****)w5);
-        freeArray(3, 3, 128, 128, (void****)w6);
-        freeArray(3, 3, 64, 64, (void****)w7);
-        freeArray(3, 3, 64, 64, (void****)w8);
-        freeArray(1, 1, 128, 128, (void****)w9);
-        freeArray(3, 3, 256, 256, (void****)w10);
-        freeArray(3, 3, 128, 128, (void****)w11);
-        freeArray(3, 3, 128, 128, (void****)w12);
-        freeArray(1, 1, 256, 256, (void****)w13);
-        freeArray(3, 3, 512, 512, (void****)w14);
-        freeArray(1, 1, 512, 256, (void****)w15);
-        freeArray(1, 1, 256, 128, (void****)w18);
-        freeArray(3, 3, 384, 256, (void****)w19);
-        freeArray(3, 3, 256, 512, (void****)w16);
-        freeArray(1, 1, 256, 255, (void****)w20);
-        freeArray(1, 1, 512, 255, (void****)w17);
+        freeArray(3, 3, 3, 32, w0);
+        freeArray(3, 3, 32, 64, w1);
+        freeArray(3, 3, 64, 64, w2);
+        freeArray(3, 3, 32, 32, w3);
+        freeArray(3, 3, 32, 32, w4);
+        freeArray(1, 1, 64, 64, w5);
+        freeArray(3, 3, 128, 128, w6);
+        freeArray(3, 3, 64, 64, w7);
+        freeArray(3, 3, 64, 64, w8);
+        freeArray(1, 1, 128, 128, w9);
+        freeArray(3, 3, 256, 256, w10);
+        freeArray(3, 3, 128, 128, w11);
+        freeArray(3, 3, 128, 128, w12);
+        freeArray(1, 1, 256, 256, w13);
+        freeArray(3, 3, 512, 512, w14);
+        freeArray(1, 1, 512, 256, w15);
+        freeArray(1, 1, 256, 128, w18);
+        freeArray(3, 3, 384, 256, w19);
+        freeArray(3, 3, 256, 512, w16);
+        freeArray(1, 1, 256, 255, w20);
+        freeArray(1, 1, 512, 255, w17);
 
-        freeArray(4, 32, (void**)w0n);
-        freeArray(4, 64, (void**)w1n);
-        freeArray(4, 64, (void**)w2n);
-        freeArray(4, 32, (void**)w3n);
-        freeArray(4, 32, (void**)w4n);
-        freeArray(4, 64, (void**)w5n);
-        freeArray(4, 128, (void**)w6n);
-        freeArray(4, 64, (void**)w7n);
-        freeArray(4, 64, (void**)w8n);
-        freeArray(4, 128, (void**)w9n);
-        freeArray(4, 256, (void**)w10n);
-        freeArray(4, 128, (void**)w11n);
-        freeArray(4, 128, (void**)w12n);
-        freeArray(4, 256, (void**)w13n);
-        freeArray(4, 512, (void**)w14n);
-        freeArray(4, 256, (void**)w15n);
-        freeArray(4, 128, (void**)w18n);
-        freeArray(4, 256, (void**)w19n);
-        freeArray(4, 512, (void**)w16n);
+        freeArray(4, 32, w0n);
+        freeArray(4, 64, w1n);
+        freeArray(4, 64, w2n);
+        freeArray(4, 32, w3n);
+        freeArray(4, 32, w4n);
+        freeArray(4, 64, w5n);
+        freeArray(4, 128, w6n);
+        freeArray(4, 64, w7n);
+        freeArray(4, 64, w8n);
+        freeArray(4, 128, w9n);
+        freeArray(4, 256, w10n);
+        freeArray(4, 128, w11n);
+        freeArray(4, 128, w12n);
+        freeArray(4, 256, w13n);
+        freeArray(4, 512, w14n);
+        freeArray(4, 256, w15n);
+        freeArray(4, 128, w18n);
+        freeArray(4, 256, w19n);
+        freeArray(4, 512, w16n);
 
-        std::free((void*)w17b);
-        std::free((void*)w20b);
+        delete [] w17b;
+        delete[] w20b;
     }
 
     // Using seperate methods for each layer easier to debug
