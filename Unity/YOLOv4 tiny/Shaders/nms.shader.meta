@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 0dd0b7aa0c606f243ae37c92243c2cb2
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _YOLOout: {fileID: 8400000, guid: f65f57790b8459947b70f08470ae495c, type: 2}
+  - _Buffer: {fileID: 8400000, guid: ede0e542051f7c64b8aecc7d6e646c66, type: 2}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
